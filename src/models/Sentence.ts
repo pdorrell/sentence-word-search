@@ -30,7 +30,7 @@ export class Sentence {
       word => !word.revealed && word.text === upperWord
     );
     if (unrevealedWord) {
-      unrevealedWord.reveal();
+      unrevealedWord.revealByUser();
       return true;
     }
     return false;

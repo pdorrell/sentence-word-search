@@ -10,7 +10,9 @@ interface SentenceDisplayProps {
 
 export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sentence, app }) => {
   const renderWord = (originalWord: string, wordIndex: number, isDebug: boolean) => {
-    const isRevealed = wordIndex < sentence.words.length ? sentence.words[wordIndex].revealed : true;
+    const word = wordIndex < sentence.words.length ? sentence.words[wordIndex] : null;
+    const isRevealed = word ? word.revealed : true;
+    const revealedByUser = word ? word.revealedByUser : false;
     
     // Extract the actual word part (letters only) and punctuation
     const wordMatch = originalWord.match(/^(\W*)(.*?)(\W*)$/);
@@ -18,11 +20,17 @@ export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sente
     
     const [, prefix, wordPart, suffix] = wordMatch;
     
+    const getWordClass = () => {
+      if (!isRevealed) return 'word unrevealed';
+      if (revealedByUser) return 'word revealed-by-user';
+      return 'word pre-revealed';
+    };
+
     if (isDebug) {
       return (
         <span key={wordIndex}>
           {prefix}
-          <span className={isRevealed ? 'word revealed' : 'word unrevealed'}>
+          <span className={getWordClass()}>
             {wordPart}
           </span>
           {suffix}
@@ -33,7 +41,7 @@ export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sente
       return (
         <span key={wordIndex}>
           {prefix}
-          <span className={isRevealed ? 'word revealed' : 'word unrevealed'}>
+          <span className={getWordClass()}>
             {displayWord}
           </span>
           {suffix}

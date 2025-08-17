@@ -139,7 +139,11 @@ body {
       background: #ffcccc;
     }
     
-    &.revealed {
+    &.revealed-by-user {
+      background: #cce5ff;
+    }
+    
+    &.pre-revealed {
       background: transparent;
     }
   }
