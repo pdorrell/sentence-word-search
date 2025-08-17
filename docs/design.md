@@ -60,8 +60,8 @@ of a word as correct if:
 * There is still at least one unsolved (ie unrevealed) instance of the word in the sentence that matches 
   the selection.
   
-When there is a choice of unsolved instances of the same word to reveal, choose the first of those
-that occur in the sentence.
+When there is a choice of unsolved instances of the same word to reveal, choose the first instance of that
+word that occurs in the sentence.
   
 For the purposes of placement, it is undesirable for a word selection in the grid to completely
 cover another word selection. However it may be difficult to avoid this entirely. (The worst outcome
