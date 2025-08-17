@@ -14,7 +14,7 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
     if (input.trim()) {
       await app.loadTopic(input.trim());
       if (!app.currentTopic?.error) {
-        setInput('');
+        setInput(input.trim());
       }
     }
   };
