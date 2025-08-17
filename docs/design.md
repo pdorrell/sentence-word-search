@@ -18,6 +18,8 @@ I want to create an online word-search puzzle with the following workflow -
 * The application parses the sentence into words.
 * The application populates a word search grid with the words from the sentence. The size of the grid
   is based on what size fits comfortably onto their screen, with a minimum size of 8x8 and maximum of 20x20.
+  (This size is determined at the moment that the user enters the topic word, so it won't change
+  if the user resizes their screen.)
 * All positions in the grid not populated from the sentence words are filled with random letters.
 * The application presents the sentence where each word not yet solved by the user is shown as 
   some non-character (eg a large black dot). So, for example, "I like eating cake." is presented as "● ●●●● ●●●●●● ●●●."
@@ -175,5 +177,7 @@ of the selection, but with rounded corners.
 * For mouse & touch dragging interactions use @use-gesture/react.
 * A sample Wikipedia request to get first Wikipedia paragraph for a topic word 
   is action=query&format=json&titles=Elephant&prop=extracts&exintro=1&explaintext=1
-  
-  
+* Use mostly HTML DOM for the UI, but for the search grid use SVG, both to display the grid letters
+  and also to display the selections.
+
+
