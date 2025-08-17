@@ -1,0 +1,39 @@
+import { makeAutoObservable } from 'mobx';
+import { Sentence } from './Sentence';
+
+export class Topic {
+  word: string;
+  sentences: Sentence[] = [];
+  currentSentenceIndex: number = 0;
+  loading: boolean = false;
+  error: string = '';
+  parent: any;
+
+  constructor(word: string, parent: any) {
+    this.word = word;
+    this.parent = parent;
+    makeAutoObservable(this);
+  }
+
+  get currentSentence(): Sentence | null {
+    if (this.sentences.length === 0) return null;
+    return this.sentences[this.currentSentenceIndex];
+  }
+
+  setCurrentSentenceIndex(index: number) {
+    if (index >= 0 && index < this.sentences.length) {
+      this.currentSentenceIndex = index;
+      this.parent.regenerateGrid();
+    }
+  }
+
+  addSentence(text: string) {
+    const sentence = new Sentence(text, this);
+    this.sentences.push(sentence);
+  }
+
+  get allComplete(): boolean {
+    return this.sentences.length > 0 && 
+           this.sentences.every(s => s.isComplete);
+  }
+}
