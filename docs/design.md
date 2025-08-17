@@ -51,6 +51,9 @@ of a word as correct if:
 * There is still at least one unsolved (ie unrevealed) instance of the word in the sentence that matches 
   the selection.
   
+When there is a choice of unsolved instances of the same word to reveal, choose the first of those
+that occur in the sentence.
+  
 For the purposes of placement, it is undesirable for a word selection in the grid to completely
 cover another word selection. However it may be difficult to avoid this entirely. (The worst outcome
 will be that the display of one or more word selections in the grid could hide or partially hide 
@@ -59,6 +62,9 @@ the display of another  word selection made earlier.)
 To minimize any overlap or hiding, the application sets a required minimum length of words to populate the puzzle,
 which is four letters - unless a sentence happens to consist entirely of words shorter than four
 letters, in which case the required minimum is the maximum length of any word in the sentence.
+Any such words not placed in the puzzle will be shown as already revealed (the same as for any other words
+that cannot be placed because there is no position they can be placed in that is consistent with what is already placed,
+or because they are just too long to fit at all).
 
 ## Numbers of sentence
 
@@ -122,4 +128,35 @@ There are five states to show:
 When a given sentence is solved and not all the sentences are yet solved, the user has to manually 
 select a different sentence to start work on. Also the user can switch to any other sentence at any time -
 even a sentence that has been fully solved (just so they can look at it if they want to).
+
+
+## Sentence solution display
+
+The next row shows the state of the current sentence that the user is working on. This consists of
+words that are revealed and words not yet revealed, showing only the initial characters.
+
+Debugging state - during initial development it will be very helpful to be able to see the actual values
+of unsolved words. So actually the unsolved words will be displayed with the letters, but with a difference
+background colour (a light red) that indicates those words are unsolved.
+
+## Grid
+
+The grid displays a square of NxN letters.
+
+If will also display user selections -
+* Correct selections already made
+* Any current selection being made by the user.
+
+In the case where correct selections overlap, the most recent selections are placed on top.
+
+Any current selection must be placed above all others.
+
+Selection states are shown in different background colours:
+
+* Existing correct solutions - light green
+* The last correct solution just made, if the user is not currently making a new selection - brighter green
+* Current selection being dragged - light orange
+* Current selection finished that is wrong - light red, and fades after 1 second (or as soon as the user starts
+  a new selection).
+  
 
