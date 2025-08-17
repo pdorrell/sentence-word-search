@@ -1,13 +1,16 @@
 import { makeAutoObservable } from 'mobx';
 
 export class Word {
-  text: string;
+  text: string;  // Clean text for grid placement (uppercase, no punctuation)
+  originalText: string;  // Original text with punctuation
   revealed: boolean = false;
   revealedByUser: boolean = false;
   gridPositions: Array<{ row: number; col: number; direction: string }> = [];
 
-  constructor(text: string) {
-    this.text = text.toUpperCase();
+  constructor(originalText: string) {
+    this.originalText = originalText;
+    // Remove all punctuation for grid placement
+    this.text = originalText.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
     makeAutoObservable(this);
   }
 

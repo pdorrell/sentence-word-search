@@ -36,34 +36,4 @@ export class Sentence {
     return false;
   }
 
-  getDisplayText(): string {
-    const originalWords = this.text.split(/\s+/);
-    return originalWords.map((origWord, index) => {
-      if (index < this.words.length && !this.words[index].revealed) {
-        const wordMatch = origWord.match(/^(\W*)(.*?)(\W*)$/);
-        if (wordMatch) {
-          const [, prefix, wordPart, suffix] = wordMatch;
-          return prefix + '●'.repeat(wordPart.length) + suffix;
-        }
-        return '●'.repeat(origWord.length);
-      }
-      return origWord;
-    }).join(' ');
-  }
-
-  getDebugDisplayText(): Array<{ text: string; revealed: boolean }> {
-    const originalWords = this.text.split(/\s+/);
-    return originalWords.map((origWord, index) => {
-      if (index < this.words.length) {
-        return {
-          text: origWord,
-          revealed: this.words[index].revealed
-        };
-      }
-      return {
-        text: origWord,
-        revealed: true
-      };
-    });
-  }
 }

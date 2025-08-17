@@ -9,6 +9,7 @@ export class Grid {
   currentSelection: GridPosition[] = [];
   wrongSelection: Selection | null = null;
   parent: any;
+  placedWords: Map<string, Word> = new Map();
 
   constructor(size: number, parent: any) {
     this.size = Math.max(8, Math.min(12, size));
@@ -21,6 +22,7 @@ export class Grid {
     this.cells = Array(this.size).fill(null).map(() => 
       Array(this.size).fill('')
     );
+    this.placedWords.clear();
   }
 
   fillWithRandomLetters() {
@@ -86,11 +88,18 @@ export class Grid {
     const directionName = this.getDirectionName(dr, dc);
     word.addGridPosition(row, col, directionName);
     
+    // Create a unique key for this word placement
+    const positions: GridPosition[] = [];
     for (let i = 0; i < word.text.length; i++) {
       const r = row + i * dr;
       const c = col + i * dc;
       this.cells[r][c] = word.text[i];
+      positions.push({ row: r, col: c });
     }
+    
+    // Store the Word instance with its placement key
+    const placementKey = this.getSelectionKey(positions);
+    this.placedWords.set(placementKey, word);
   }
 
   getDirectionName(dr: number, dc: number): string {
@@ -133,7 +142,12 @@ export class Grid {
       sel => this.getSelectionKey(sel.positions) === selectionKey
     );
 
-    if (!isAlreadySelected && this.parent.currentSentence?.revealWord(word)) {
+    // Find the specific Word instance that was placed at this position
+    const placedWord = this.placedWords.get(selectionKey);
+    
+    if (!isAlreadySelected && placedWord && !placedWord.revealed) {
+      // Directly reveal the specific Word instance
+      placedWord.revealByUser();
       this.correctSelections.push(new Selection(this.currentSelection, word));
       this.currentSelection = [];
       return true;

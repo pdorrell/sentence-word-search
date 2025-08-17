@@ -10,7 +10,7 @@ export class App {
   grid: Grid | null = null;
   wikipediaService: WikipediaService;
   textParser: TextParser;
-  debugMode: boolean = false;
+  debugMode: boolean = true;
 
   constructor(
     wikipediaService: WikipediaService = new WikipediaService(),

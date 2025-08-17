@@ -8,11 +8,15 @@ export class TextParser {
   }
 
   extractWords(sentence: string): string[] {
-    const doc = nlp(sentence);
-    const terms = doc.terms().out('array') as string[];
+    // Split by whitespace to get the same word boundaries as the sentence display
+    const words = sentence.split(/\s+/);
     
-    return terms
-      .map((term: string) => term.replace(/[^a-zA-Z]/g, ''))
+    return words
+      .map((word: string) => {
+        // Remove leading and trailing punctuation, but keep internal punctuation
+        // This preserves apostrophes and hyphens within words
+        return word.replace(/^[^\w'-]+|[^\w'-]+$/g, '');
+      })
       .filter((word: string) => word.length > 0);
   }
 }

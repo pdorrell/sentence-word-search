@@ -2,6 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Sentence } from '../models/Sentence';
 import { App } from '../models/App';
+import { Word } from '../models/Word';
 
 interface SentenceDisplayProps {
   sentence: Sentence;
@@ -9,16 +10,9 @@ interface SentenceDisplayProps {
 }
 
 export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sentence, app }) => {
-  const renderWord = (originalWord: string, wordIndex: number, isDebug: boolean) => {
-    const word = wordIndex < sentence.words.length ? sentence.words[wordIndex] : null;
-    const isRevealed = word ? word.revealed : true;
-    const revealedByUser = word ? word.revealedByUser : false;
-    
-    // Extract the actual word part (letters only) and punctuation
-    const wordMatch = originalWord.match(/^(\W*)(.*?)(\W*)$/);
-    if (!wordMatch) return originalWord;
-    
-    const [, prefix, wordPart, suffix] = wordMatch;
+  const renderWord = (word: Word, wordIndex: number, isDebug: boolean) => {
+    const isRevealed = word.revealed;
+    const revealedByUser = word.revealedByUser;
     
     const getWordClass = () => {
       if (!isRevealed) return 'word unrevealed';
@@ -29,35 +23,29 @@ export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sente
     if (isDebug) {
       return (
         <span key={wordIndex}>
-          {prefix}
           <span className={getWordClass()}>
-            {wordPart}
+            {word.originalText}
           </span>
-          {suffix}
         </span>
       );
     } else {
-      const displayWord = isRevealed ? wordPart : '●'.repeat(wordPart.length);
+      const displayWord = isRevealed ? word.originalText : '●'.repeat(word.originalText.length);
       return (
         <span key={wordIndex}>
-          {prefix}
           <span className={getWordClass()}>
             {displayWord}
           </span>
-          {suffix}
         </span>
       );
     }
   };
-
-  const originalWords = sentence.text.split(/\s+/);
   
   return (
     <div className={app.debugMode ? "sentence-display debug" : "sentence-display"}>
-      {originalWords.map((word, index) => (
+      {sentence.words.map((word, index) => (
         <React.Fragment key={index}>
           {renderWord(word, index, app.debugMode)}
-          {index < originalWords.length - 1 && ' '}
+          {index < sentence.words.length - 1 && ' '}
         </React.Fragment>
       ))}
     </div>
