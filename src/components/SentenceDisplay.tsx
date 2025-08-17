@@ -29,7 +29,7 @@ export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sente
         </span>
       );
     } else {
-      const displayWord = isRevealed ? wordPart : wordPart.replace(/[a-zA-Z]/g, '●');
+      const displayWord = isRevealed ? wordPart : '●'.repeat(wordPart.length);
       return (
         <span key={wordIndex}>
           {prefix}{displayWord}{suffix}

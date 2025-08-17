@@ -40,7 +40,12 @@ export class Sentence {
     const originalWords = this.text.split(/\s+/);
     return originalWords.map((origWord, index) => {
       if (index < this.words.length && !this.words[index].revealed) {
-        return origWord.replace(/[a-zA-Z]/g, '●');
+        const wordMatch = origWord.match(/^(\W*)(.*?)(\W*)$/);
+        if (wordMatch) {
+          const [, prefix, wordPart, suffix] = wordMatch;
+          return prefix + '●'.repeat(wordPart.length) + suffix;
+        }
+        return '●'.repeat(origWord.length);
       }
       return origWord;
     }).join(' ');
