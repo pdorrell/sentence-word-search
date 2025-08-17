@@ -17,7 +17,7 @@ I want to create an online word-search puzzle with the following workflow -
   and also which sentence the puzzle is currently on - starting with the 1st sentence.
 * The application parses the sentence into words.
 * The application populates a word search grid with the words from the sentence. The size of the grid
-  is based on what size fits comfortably onto their screen, with a minimum size of 8x8 and maximum of 20x20.
+  is based on what size fits comfortably onto their screen, with a minimum size of 8x8 and maximum of 12x12.
   (This size is determined at the moment that the user enters the topic word, so it won't change
   if the user resizes their screen.)
 * All positions in the grid not populated from the sentence words are filled with random letters.

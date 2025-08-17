@@ -27,7 +27,7 @@ export class App {
     const minDimension = Math.min(width, height);
     const cellSize = 40;
     const gridSize = Math.floor(minDimension / cellSize);
-    return Math.max(8, Math.min(20, gridSize));
+    return Math.max(8, Math.min(12, gridSize));
   }
 
   async loadTopic(word: string) {

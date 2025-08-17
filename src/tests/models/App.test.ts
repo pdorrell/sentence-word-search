@@ -56,7 +56,7 @@ describe('App Model', () => {
     const size = app.calculateGridSize();
     
     expect(size).toBeGreaterThanOrEqual(8);
-    expect(size).toBeLessThanOrEqual(20);
+    expect(size).toBeLessThanOrEqual(12);
   });
 
   it('should reset topic correctly', async () => {

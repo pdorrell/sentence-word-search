@@ -11,7 +11,7 @@ export class Grid {
   parent: any;
 
   constructor(size: number, parent: any) {
-    this.size = Math.max(8, Math.min(20, size));
+    this.size = Math.max(8, Math.min(12, size));
     this.parent = parent;
     this.initializeGrid();
     makeAutoObservable(this);
