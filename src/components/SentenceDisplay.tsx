@@ -32,7 +32,11 @@ export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sente
       const displayWord = isRevealed ? wordPart : '●'.repeat(wordPart.length);
       return (
         <span key={wordIndex}>
-          {prefix}{displayWord}{suffix}
+          {prefix}
+          <span className={isRevealed ? 'word revealed' : 'word unrevealed'}>
+            {displayWord}
+          </span>
+          {suffix}
         </span>
       );
     }
