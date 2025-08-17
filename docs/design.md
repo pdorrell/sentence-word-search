@@ -8,6 +8,10 @@ I want to create an online word-search puzzle with the following workflow -
   * (If the word isn't a Wikipedia page, the application will tell the user to try something else.)
 * The application uses the Wikipedia JSON API to download the plain text version of the first paragraph
   of that Wikipedia page.
+* Use "User-Agent" and "Api-User-Agent" that satisfy Wikipedia requirements:
+  * For URL use https://sentence-word-search.thinkinghard.com/about
+  * For email use "web@thinkinghard.com"
+  * For application name use "Sentence Word Search"  
 * The application parses the paragraph into sentences.
 * The application UI gives the user an indication of how many sentences there are in the paragraph
   and also which sentence the puzzle is currently on - starting with the 1st sentence.
@@ -24,6 +28,9 @@ I want to create an online word-search puzzle with the following workflow -
 * When a sentence is completed, the application will move onto the next sentence. However at any time
   the user can choose to start working on a different sentence using the sentence selection/state UI.
 * When all the sentences are completed for the word, then the user will have to choose a new word to work on.
+
+The application will provide an "/about" web page that gives a basic description of the application
+and how it uses the Wikipedia API.
 
 ## Suggested Implementation Technologies
 
@@ -90,7 +97,7 @@ The UI for the application consists of five elements the populate the page going
 
 The heading will be "Sentences Word Search"
 
-## Topic Word choice
+### Topic Word choice
 
 Initially this will consist of a row of elements:
 
@@ -108,7 +115,7 @@ row "New Topic ...". When the user clicks on this, if the user has not successfu
 sentences, the application will ask for confirmation "Do you want to start with a new topic word?"
 before then resetting the application back to the state of waiting for the user to input a topic word.
 
-## Sentence choice and state
+### Sentence choice and state
 
 The downloaded extract will contain one or more sentences, with the application not using more than
 ten sentences.
@@ -130,7 +137,7 @@ select a different sentence to start work on. Also the user can switch to any ot
 even a sentence that has been fully solved (just so they can look at it if they want to).
 
 
-## Sentence solution display
+### Sentence solution display
 
 The next row shows the state of the current sentence that the user is working on. This consists of
 words that are revealed and words not yet revealed, showing only the initial characters.
@@ -139,7 +146,7 @@ Debugging state - during initial development it will be very helpful to be able 
 of unsolved words. So actually the unsolved words will be displayed with the letters, but with a difference
 background colour (a light red) that indicates those words are unsolved.
 
-## Grid
+### Grid
 
 The grid displays a square of NxN letters.
 
@@ -159,4 +166,14 @@ Selection states are shown in different background colours:
 * Current selection finished that is wrong - light red, and fades after 1 second (or as soon as the user starts
   a new selection).
   
+The actual display of a selection should be a bordered rectangle that covers all the letters that are part
+of the selection, but with rounded corners.
 
+## Implementation suggestions
+
+* For parsing a paragraph into sentences and sentences into words, use **compromise** Javascript library.
+* For mouse & touch dragging interactions use @use-gesture/react.
+* A sample Wikipedia request to get first Wikipedia paragraph for a topic word 
+  is action=query&format=json&titles=Elephant&prop=extracts&exintro=1&explaintext=1
+  
+  
