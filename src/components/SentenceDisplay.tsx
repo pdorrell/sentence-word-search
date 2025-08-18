@@ -40,6 +40,9 @@ export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sente
     }
   };
   
+  // Check if the sentence has final punctuation that was stripped during word parsing
+  const sentenceEndsWithPunctuation = sentence.text.match(/[.!?]$/);
+  
   return (
     <div className={app.debugMode ? "sentence-display debug" : "sentence-display"}>
       {sentence.words.map((word, index) => (
@@ -48,6 +51,9 @@ export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sente
           {index < sentence.words.length - 1 && ' '}
         </React.Fragment>
       ))}
+      {sentenceEndsWithPunctuation && (
+        <span className="word pre-revealed">{sentenceEndsWithPunctuation[0]}</span>
+      )}
     </div>
   );
 });
