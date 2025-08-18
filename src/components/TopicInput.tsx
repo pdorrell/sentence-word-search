@@ -20,8 +20,11 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
   };
 
   const handleNewTopic = () => {
-    const shouldReset = !app.currentTopic?.allComplete || 
-      window.confirm('Do you want to start with a new topic word?');
+    const currentSentence = app.currentTopic?.currentSentence;
+    const needsConfirmation = currentSentence?.isStarted && !currentSentence?.isComplete;
+    
+    const shouldReset = !needsConfirmation || 
+      window.confirm('The current sentence is not complete. Do you want to start with a new topic?');
     
     if (shouldReset) {
       app.resetTopic();
