@@ -17,7 +17,7 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
   if (isAboutPage) {
     return (
       <div className="app about-page">
-        <Header />
+        <Header app={app} />
         <div className="about-content">
           <h2>About Sentence Word Search</h2>
           <p>
@@ -49,7 +49,7 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
 
   return (
     <div className="app">
-      <Header />
+      <Header app={app} />
       <TopicInput app={app} />
       
       {app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0 && (

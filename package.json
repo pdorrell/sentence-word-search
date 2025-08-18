@@ -11,8 +11,9 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
+    "test:full": "vitest run",
     "build:full": "npm run test:full && npm run build",
-    "deploy": "node scripts/update-version.js && npm run build:full && node scripts/deploy-to-target.js",
+    "deploy": "node scripts/update-version.js && npm run build:full && node scripts/deploy-to-target.js"
   },
   "keywords": [],
   "author": "",

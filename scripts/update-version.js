@@ -26,11 +26,18 @@ const getFormattedDateTime = () => {
 
 const rootDir = path.join(__dirname, '..');
 const versionFile = path.join(rootDir, 'version.txt');
+const publicVersionFile = path.join(rootDir, 'public', 'version.txt');
 const newVersion = getFormattedDateTime();
 
 try {
   fs.writeFileSync(versionFile, newVersion);
   console.log(`Updated version.txt to: ${newVersion}`);
+  
+  // Also update public/version.txt if public directory exists
+  if (fs.existsSync(path.join(rootDir, 'public'))) {
+    fs.writeFileSync(publicVersionFile, newVersion);
+    console.log(`Updated public/version.txt to: ${newVersion}`);
+  }
 } catch (error) {
   console.error(`❌ Error updating version.txt: ${error.message}`);
   process.exit(1);
