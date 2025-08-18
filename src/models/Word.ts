@@ -9,8 +9,8 @@ export class Word {
 
   constructor(originalText: string) {
     this.originalText = originalText;
-    // Remove all punctuation for grid placement
-    this.text = originalText.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    // Keep all characters but convert to uppercase for grid placement
+    this.text = originalText.toUpperCase();
     makeAutoObservable(this);
   }
 
