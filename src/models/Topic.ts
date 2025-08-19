@@ -6,7 +6,7 @@ export class Topic {
   sentences: Sentence[] = [];
   currentSentenceIndex: number = 0;
   loading: boolean = false;
-  error: string = '';
+  error: string | null = null;
   parent: any;
 
   constructor(word: string, parent: any) {
