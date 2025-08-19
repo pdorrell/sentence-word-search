@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { App } from '../models/App';
+import { ConfirmDialog } from './ConfirmDialog';
 
 interface HeaderProps {
   app: App;
@@ -8,6 +9,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = observer(({ app }) => {
   const [version, setVersion] = useState<string>('');
+  const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
     fetch('/version.txt')
@@ -18,15 +20,19 @@ export const Header: React.FC<HeaderProps> = observer(({ app }) => {
 
   const handleDebugToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked && !app.debugMode) {
-      const shouldEnable = window.confirm('Do you want to cheat by seeing the letters of unsolved words?');
-      if (shouldEnable) {
-        app.debugMode = true;
-      } else {
-        e.target.checked = false;
-      }
+      setShowConfirm(true);
     } else if (!e.target.checked) {
       app.debugMode = false;
     }
+  };
+
+  const handleConfirmDebug = () => {
+    app.debugMode = true;
+    setShowConfirm(false);
+  };
+
+  const handleCancelDebug = () => {
+    setShowConfirm(false);
   };
 
   return (
@@ -41,6 +47,13 @@ export const Header: React.FC<HeaderProps> = observer(({ app }) => {
           onChange={handleDebugToggle}
         />
       </div>
+      {showConfirm && (
+        <ConfirmDialog
+          message="Do you want to cheat by seeing the letters of unsolved words?"
+          onConfirm={handleConfirmDebug}
+          onCancel={handleCancelDebug}
+        />
+      )}
     </header>
   );
 });

@@ -42,6 +42,21 @@ export class App {
     try {
       const text = await this.wikipediaService.fetchFirstParagraph(word, language);
       const sentences = this.textParser.extractSentences(text);
+      
+      // Check for disambiguation page (single sentence ending with "may refer to")
+      if (sentences.length === 1 && sentences[0].trim().endsWith('may refer to:')) {
+        const ambiguousTranslations: Record<string, string> = {
+          'en': 'Ambiguous topic word',
+          'es': 'Palabra temática ambigua',
+          'qu': 'Mana chuyanchasqa tema simi'
+        };
+        this.setErrorMessage(ambiguousTranslations[language] || ambiguousTranslations['en']);
+        topic.loading = false;
+        topic.error = null;
+        this.currentTopic = null;
+        return;
+      }
+      
       const limitedSentences = sentences.slice(0, 10);
       
       for (const sentenceText of limitedSentences) {

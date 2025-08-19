@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { App } from '../models/App';
+import { ConfirmDialog } from './ConfirmDialog';
 
 interface TopicInputProps {
   app: App;
@@ -9,6 +10,7 @@ interface TopicInputProps {
 export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
   const [input, setInput] = useState('');
   const [language, setLanguage] = useState('EN');
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,13 +26,22 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
     const currentSentence = app.currentTopic?.currentSentence;
     const needsConfirmation = currentSentence?.isStarted && !currentSentence?.isComplete;
     
-    const shouldReset = !needsConfirmation || 
-      window.confirm('The current sentence is not complete. Do you want to start with a new topic?');
-    
-    if (shouldReset) {
+    if (needsConfirmation) {
+      setShowConfirm(true);
+    } else {
       app.resetTopic();
       setInput('');
     }
+  };
+
+  const handleConfirmReset = () => {
+    app.resetTopic();
+    setInput('');
+    setShowConfirm(false);
+  };
+
+  const handleCancelReset = () => {
+    setShowConfirm(false);
   };
 
   return (
@@ -65,6 +76,13 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
       </form>
       {app.currentTopic?.error && (
         <div className="error">{app.currentTopic.error}</div>
+      )}
+      {showConfirm && (
+        <ConfirmDialog
+          message="The current sentence is not complete. Do you want to start with a new topic?"
+          onConfirm={handleConfirmReset}
+          onCancel={handleCancelReset}
+        />
       )}
     </div>
   );

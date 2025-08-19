@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { App } from '../models/App';
 import { Header } from './Header';
@@ -13,6 +13,21 @@ interface AppViewProps {
 
 export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
   const isAboutPage = window.location.pathname === '/about';
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // Check if there's an unfinished puzzle
+      const currentSentence = app.currentTopic?.currentSentence;
+      if (currentSentence?.isStarted && !currentSentence?.isComplete) {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [app.currentTopic]);
 
   if (isAboutPage) {
     return (
