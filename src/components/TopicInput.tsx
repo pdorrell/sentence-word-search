@@ -55,6 +55,7 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
           disabled={!!app.currentTopic && !app.currentTopic.error}
           maxLength={20}
           size={20}
+          autoFocus
         />
         {app.currentTopic && !app.currentTopic.error && (
           <button type="button" onClick={handleNewTopic}>
