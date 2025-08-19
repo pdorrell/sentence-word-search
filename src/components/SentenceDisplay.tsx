@@ -44,16 +44,18 @@ export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sente
   const sentenceEndsWithPunctuation = sentence.text.match(/[.!?]$/);
   
   return (
-    <div className={app.debugMode ? "sentence-display debug" : "sentence-display"}>
-      {sentence.words.map((word, index) => (
-        <React.Fragment key={index}>
-          {renderWord(word, index, app.debugMode)}
-          {index < sentence.words.length - 1 && ' '}
-        </React.Fragment>
-      ))}
-      {sentenceEndsWithPunctuation && (
-        <span className="word pre-revealed">{sentenceEndsWithPunctuation[0]}</span>
-      )}
+    <div className="sentence-container">
+      <div className={app.debugMode ? "sentence-display debug" : "sentence-display"}>
+        {sentence.words.map((word, index) => (
+          <React.Fragment key={index}>
+            {renderWord(word, index, app.debugMode)}
+            {index < sentence.words.length - 1 && ' '}
+          </React.Fragment>
+        ))}
+        {sentenceEndsWithPunctuation && (
+          <span className="word pre-revealed">{sentenceEndsWithPunctuation[0]}</span>
+        )}
+      </div>
     </div>
   );
 });
