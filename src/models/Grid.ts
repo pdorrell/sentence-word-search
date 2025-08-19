@@ -136,18 +136,17 @@ export class Grid {
     }
 
     const word = this.getWordFromSelection(this.currentSelection);
-    const selectionKey = this.getSelectionKey(this.currentSelection);
+    
+    // Check if this selection matches any placed word in the correct direction
+    const matchedWord = this.findMatchingWord(this.currentSelection, word);
     
     const isAlreadySelected = this.correctSelections.some(
-      sel => this.getSelectionKey(sel.positions) === selectionKey
+      sel => this.getSelectionKey(sel.positions) === this.getSelectionKey(this.currentSelection)
     );
 
-    // Find the specific Word instance that was placed at this position
-    const placedWord = this.placedWords.get(selectionKey);
-    
-    if (!isAlreadySelected && placedWord && !placedWord.revealed) {
+    if (!isAlreadySelected && matchedWord && !matchedWord.revealed) {
       // Directly reveal the specific Word instance
-      placedWord.revealByUser();
+      matchedWord.revealByUser();
       this.correctSelections.push(new Selection(this.currentSelection, word));
       this.currentSelection = [];
       return true;
@@ -159,6 +158,73 @@ export class Grid {
       }, 1000);
       return false;
     }
+  }
+
+  findMatchingWord(positions: GridPosition[], selectedWord: string): Word | null {
+    // For each placed word, check if the selection matches it exactly
+    for (const [key, word] of this.placedWords) {
+      if (word.text !== selectedWord) continue;
+      
+      // Get the positions for this placed word
+      for (const placement of word.gridPositions) {
+        const wordPositions = this.getWordPositions(
+          placement.row, 
+          placement.col, 
+          placement.direction, 
+          word.text.length
+        );
+        
+        // Check if positions match exactly (in order)
+        if (this.positionsMatch(positions, wordPositions)) {
+          return word;
+        }
+        
+        // For palindromes, also check reverse direction
+        if (this.isPalindrome(word.text) && 
+            this.positionsMatch(positions, [...wordPositions].reverse())) {
+          return word;
+        }
+      }
+    }
+    return null;
+  }
+
+  getWordPositions(row: number, col: number, direction: string, length: number): GridPosition[] {
+    const positions: GridPosition[] = [];
+    let dr = 0, dc = 0;
+    
+    switch(direction) {
+      case 'horizontal': dr = 0; dc = 1; break;
+      case 'vertical': dr = 1; dc = 0; break;
+      case 'diagonal-down-right': dr = 1; dc = 1; break;
+      case 'diagonal-down-left': dr = 1; dc = -1; break;
+      case 'diagonal-up-right': dr = -1; dc = 1; break;
+      case 'diagonal-up-left': dr = -1; dc = -1; break;
+      case 'horizontal-back': dr = 0; dc = -1; break;
+      case 'vertical-up': dr = -1; dc = 0; break;
+    }
+    
+    for (let i = 0; i < length; i++) {
+      positions.push({ row: row + i * dr, col: col + i * dc });
+    }
+    
+    return positions;
+  }
+
+  positionsMatch(pos1: GridPosition[], pos2: GridPosition[]): boolean {
+    if (pos1.length !== pos2.length) return false;
+    
+    for (let i = 0; i < pos1.length; i++) {
+      if (pos1[i].row !== pos2[i].row || pos1[i].col !== pos2[i].col) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  isPalindrome(text: string): boolean {
+    const reversed = text.split('').reverse().join('');
+    return text === reversed;
   }
 
   getLinePositions(r1: number, c1: number, r2: number, c2: number): GridPosition[] {
