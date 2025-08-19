@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { App } from '../models/App';
 import { ConfirmDialog } from './ConfirmDialog';
+import { AboutDialog } from './AboutDialog';
 
 interface HeaderProps {
   app: App;
@@ -10,6 +11,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = observer(({ app }) => {
   const [version, setVersion] = useState<string>('');
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
 
   useEffect(() => {
     fetch('/version.txt')
@@ -46,6 +48,9 @@ export const Header: React.FC<HeaderProps> = observer(({ app }) => {
           checked={app.debugMode}
           onChange={handleDebugToggle}
         />
+        <button className="info-button" onClick={() => setShowAbout(true)} title="About">
+          ℹ️
+        </button>
       </div>
       {showConfirm && (
         <ConfirmDialog
@@ -53,6 +58,9 @@ export const Header: React.FC<HeaderProps> = observer(({ app }) => {
           onConfirm={handleConfirmDebug}
           onCancel={handleCancelDebug}
         />
+      )}
+      {showAbout && (
+        <AboutDialog onClose={() => setShowAbout(false)} />
       )}
     </header>
   );
