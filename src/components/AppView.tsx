@@ -52,6 +52,12 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
       <Header app={app} />
       <TopicInput app={app} />
       
+      {app.errorMessage && (
+        <div className="error-message">
+          {app.errorMessage}
+        </div>
+      )}
+      
       {app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0 && (
         <>
           <SentenceSelector topic={app.currentTopic} />

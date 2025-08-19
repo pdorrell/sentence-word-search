@@ -11,6 +11,8 @@ export class App {
   wikipediaService: WikipediaService;
   textParser: TextParser;
   debugMode: boolean = false;
+  currentLanguage: string = 'en';
+  errorMessage: string | null = null;
 
   constructor(
     wikipediaService: WikipediaService = new WikipediaService(),
@@ -34,6 +36,8 @@ export class App {
     const topic = new Topic(word, this);
     topic.loading = true;
     this.currentTopic = topic;
+    this.currentLanguage = language;
+    this.errorMessage = null;
     
     try {
       const text = await this.wikipediaService.fetchFirstParagraph(word, language);
@@ -55,7 +59,22 @@ export class App {
       }
     } catch (error) {
       topic.loading = false;
-      topic.error = `No such topic: ${word}`;
+      const translations: Record<string, string> = {
+        'en': 'Word not found',
+        'es': 'Palabra no encontrada',
+        'qu': 'Mana tarisqachu'
+      };
+      
+      // Check if this is a "not found" error or another error
+      if (error instanceof Error && (error.message === 'Topic not found' || error.message.toLowerCase().includes('not found'))) {
+        this.setErrorMessage(translations[language] || translations['en']);
+        topic.error = null; // Don't show in the topic input error
+      } else {
+        // For other errors, show them without translation
+        const errorMsg = error instanceof Error ? error.message : 'An error occurred';
+        this.setErrorMessage(errorMsg);
+        topic.error = null;
+      }
       this.currentTopic = null;
     }
   }
@@ -109,6 +128,19 @@ export class App {
   resetTopic() {
     this.currentTopic = null;
     this.grid = null;
+    this.errorMessage = null;
+  }
+  
+  setErrorMessage(message: string) {
+    this.errorMessage = message;
+    // Clear error after 3 seconds
+    setTimeout(() => {
+      this.errorMessage = null;
+    }, 3000);
+  }
+  
+  clearErrorMessage() {
+    this.errorMessage = null;
   }
 
   get currentSentence(): Sentence | null {
