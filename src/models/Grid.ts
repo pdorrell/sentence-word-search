@@ -162,7 +162,7 @@ export class Grid {
 
   findMatchingWord(positions: GridPosition[], selectedWord: string): Word | null {
     // For each placed word, check if the selection matches it exactly
-    for (const [key, word] of this.placedWords) {
+    for (const [, word] of this.placedWords) {
       if (word.text !== selectedWord) continue;
       
       // Get the positions for this placed word
