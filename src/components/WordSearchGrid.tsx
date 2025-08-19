@@ -62,14 +62,20 @@ export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid })
     const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
     const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
     
+    // Check if selection is diagonal (not horizontal or vertical)
+    const isDiagonal = start.row !== end.row && start.col !== end.col;
+    // Make diagonal selections 20% narrower (0.64 instead of 0.8)
+    const selectionHeight = isDiagonal ? cellSize * 0.64 : cellSize * 0.8;
+    const selectionOffset = isDiagonal ? cellSize * 0.32 : cellSize * 0.4;
+    
     return (
       <rect
         key={key}
         className={`selection ${className}`}
-        x={x1 - cellSize * 0.4}
-        y={-cellSize * 0.4}
-        width={length + cellSize * 0.8}
-        height={cellSize * 0.8}
+        x={x1 - selectionOffset}
+        y={-selectionOffset}
+        width={length + selectionOffset * 2}
+        height={selectionHeight}
         rx={cellSize * 0.3}
         transform={`translate(0, ${y1}) rotate(${angle} ${x1} 0)`}
       />
