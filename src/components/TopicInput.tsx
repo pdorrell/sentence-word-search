@@ -12,13 +12,20 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
   const [language, setLanguage] = useState('EN');
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (input.trim()) {
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (input.trim() && !app.currentTopic) {
       await app.loadTopic(input.trim(), language.toLowerCase());
       if (!app.currentTopic?.error) {
         setInput(input.trim());
       }
+    }
+  };
+
+  const handleBlur = () => {
+    // Only submit on blur if there's input and no topic loaded yet
+    if (input.trim() && !app.currentTopic) {
+      handleSubmit();
     }
   };
 
@@ -63,6 +70,7 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onBlur={handleBlur}
           disabled={!!app.currentTopic && !app.currentTopic.error}
           maxLength={20}
           size={20}
