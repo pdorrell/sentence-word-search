@@ -92,27 +92,6 @@ export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid })
         {...bind()}
         style={{ touchAction: 'none' }}
       >
-        {/* Grid lines */}
-        {Array.from({ length: grid.size + 1 }).map((_, i) => (
-          <g key={`lines-${i}`}>
-            <line
-              x1={0}
-              y1={i * cellSize}
-              x2={svgSize}
-              y2={i * cellSize}
-              stroke="#ddd"
-              strokeWidth="1"
-            />
-            <line
-              x1={i * cellSize}
-              y1={0}
-              x2={i * cellSize}
-              y2={svgSize}
-              stroke="#ddd"
-              strokeWidth="1"
-            />
-          </g>
-        ))}
 
         {/* Letters */}
         {grid.cells.map((row, rowIndex) =>
