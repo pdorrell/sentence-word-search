@@ -1,7 +1,8 @@
 export class WikipediaService {
-  private baseUrl = 'https://en.wikipedia.org/w/api.php';
-
-  async fetchFirstParagraph(topic: string): Promise<string> {
+  async fetchFirstParagraph(topic: string, language: string = 'en'): Promise<string> {
+    // QU is Quechua language code
+    const baseUrl = `https://${language}.wikipedia.org/w/api.php`;
+    
     const params = new URLSearchParams({
       action: 'query',
       format: 'json',
@@ -12,7 +13,7 @@ export class WikipediaService {
       origin: '*'
     });
 
-    const response = await fetch(`${this.baseUrl}?${params}`, {
+    const response = await fetch(`${baseUrl}?${params}`, {
       headers: {
         'User-Agent': 'Sentence Word Search/1.0 (https://word-search.thinkinghard.com/; web@thinkinghard.com)',
         'Api-User-Agent': 'Sentence Word Search/1.0 (https://word-search.thinkinghard.com/; web@thinkinghard.com)'

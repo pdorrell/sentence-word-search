@@ -30,13 +30,13 @@ export class App {
     return Math.max(8, Math.min(12, gridSize));
   }
 
-  async loadTopic(word: string) {
+  async loadTopic(word: string, language: string = 'en') {
     const topic = new Topic(word, this);
     topic.loading = true;
     this.currentTopic = topic;
     
     try {
-      const text = await this.wikipediaService.fetchFirstParagraph(word);
+      const text = await this.wikipediaService.fetchFirstParagraph(word, language);
       const sentences = this.textParser.extractSentences(text);
       const limitedSentences = sentences.slice(0, 10);
       
