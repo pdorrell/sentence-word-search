@@ -124,6 +124,21 @@ body {
     }
   }
   
+  .new-topic-button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 2px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    
+    &:hover {
+      background: none;
+      opacity: 1;
+    }
+  }
+  
   .error {
     color: #e74c3c;
     margin-top: 10px;

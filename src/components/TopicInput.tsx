@@ -54,7 +54,7 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
   return (
     <div className="topic-input">
       <form onSubmit={handleSubmit}>
-        <label htmlFor="topic">Wikipedia topic</label>
+        <label htmlFor="topic" title="Enter Wikipedia topic to generate word searches">Topic</label>
         <select
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
@@ -75,10 +75,12 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
           maxLength={20}
           size={20}
           autoFocus
+          placeholder="e.g., Elephant"
+          title="Enter Wikipedia topic to generate word searches"
         />
         {app.currentTopic && !app.currentTopic.error && (
-          <button type="button" onClick={handleNewTopic}>
-            New Topic ...
+          <button type="button" onClick={handleNewTopic} className="new-topic-button" title="Start new topic">
+            🆕
           </button>
         )}
       </form>
