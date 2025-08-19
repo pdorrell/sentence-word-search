@@ -63,11 +63,14 @@ body {
   display: flex;
   justify-content: center;
   margin-bottom: 30px;
+  padding: 0 20px;
   
   form {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
+    max-width: 100%;
   }
   
   label {
@@ -79,6 +82,8 @@ body {
     border: 2px solid #ddd;
     border-radius: 4px;
     font-size: 16px;
+    width: 160px;
+    min-width: 100px;
     
     &:focus {
       outline: none;
@@ -88,6 +93,10 @@ body {
     &:disabled {
       background: #f0f0f0;
       cursor: not-allowed;
+    }
+    
+    @media (max-width: 480px) {
+      width: 120px;
     }
   }
   
