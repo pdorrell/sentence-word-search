@@ -1,9 +1,11 @@
 import { makeAutoObservable } from 'mobx';
 import { Word } from './Word';
+import { Grid } from './Grid';
 
 export class Sentence {
   text: string;
   words: Word[] = [];
+  grid: Grid | null = null;
   parent: any;
 
   constructor(text: string, parent: any) {

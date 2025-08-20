@@ -78,7 +78,7 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
           {app.currentTopic!.currentSentence && (
             <>
               <SentenceDisplay sentence={app.currentTopic!.currentSentence} app={app} />
-              {app.grid && <WordSearchGrid grid={app.grid} />}
+              {app.currentTopic!.currentSentence.grid && <WordSearchGrid grid={app.currentTopic!.currentSentence.grid} />}
             </>
           )}
         </div>
@@ -120,7 +120,7 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
           {app.currentTopic.currentSentence && (
             <>
               <SentenceDisplay sentence={app.currentTopic.currentSentence} app={app} />
-              {app.grid && <WordSearchGrid grid={app.grid} />}
+              {app.currentTopic.currentSentence.grid && <WordSearchGrid grid={app.currentTopic.currentSentence.grid} />}
             </>
           )}
         </div>

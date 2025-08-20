@@ -16,7 +16,6 @@ describe('App Model', () => {
 
   it('should initialize with no current topic', () => {
     expect(app.currentTopic).toBeNull();
-    expect(app.grid).toBeNull();
   });
 
   it('should load a topic successfully', async () => {
@@ -28,7 +27,7 @@ describe('App Model', () => {
     expect(app.currentTopic).not.toBeNull();
     expect(app.currentTopic?.word).toBe('elephant');
     expect(app.currentTopic?.sentences).toHaveLength(2);
-    expect(app.grid).not.toBeNull();
+    expect(app.currentTopic?.sentences[0].grid).not.toBeNull();
   });
 
   it('should handle topic load failure', async () => {
@@ -37,7 +36,6 @@ describe('App Model', () => {
     await app.loadTopic('nonexistent');
     
     expect(app.currentTopic).toBeNull();
-    expect(app.grid).toBeNull();
   });
 
   it('should limit sentences to 10', async () => {
@@ -66,6 +64,5 @@ describe('App Model', () => {
     app.resetTopic();
     
     expect(app.currentTopic).toBeNull();
-    expect(app.grid).toBeNull();
   });
 });

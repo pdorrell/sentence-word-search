@@ -7,7 +7,6 @@ import { TextParser } from '../services/TextParser';
 
 export class App {
   currentTopic: Topic | null = null;
-  grid: Grid | null = null;
   wikipediaService: WikipediaService;
   textParser: TextParser;
   debugMode: boolean = false;
@@ -75,9 +74,8 @@ export class App {
       topic.loading = false;
       
       if (topic.sentences.length > 0) {
-        const gridSize = this.calculateGridSize();
-        this.grid = new Grid(gridSize, this);
-        this.populateGrid();
+        // Initialize grid for the first sentence
+        this.initializeSentenceGrid(topic.sentences[0]);
       }
     } catch (error) {
       topic.loading = false;
@@ -101,13 +99,16 @@ export class App {
     }
   }
 
-  populateGrid() {
-    if (!this.grid || !this.currentTopic?.currentSentence) return;
+  initializeSentenceGrid(sentence: Sentence) {
+    // Only generate grid if it doesn't exist yet
+    if (sentence.grid) return;
     
-    this.grid.initializeGrid();
-    this.grid.correctSelections = [];
+    const gridSize = this.calculateGridSize();
+    sentence.grid = new Grid(gridSize, this);
     
-    const sentence = this.currentTopic.currentSentence;
+    sentence.grid.initializeGrid();
+    sentence.grid.correctSelections = [];
+    
     const minWordLength = this.getMinWordLength(sentence);
     
     const wordsToPlace = sentence.words.filter(word => 
@@ -117,7 +118,7 @@ export class App {
     const wordsNotPlaced: typeof wordsToPlace = [];
     
     for (const word of wordsToPlace) {
-      if (!this.grid.placeWord(word)) {
+      if (!sentence.grid.placeWord(word)) {
         wordsNotPlaced.push(word);
       }
     }
@@ -132,7 +133,7 @@ export class App {
       }
     }
     
-    this.grid.fillWithRandomLetters();
+    sentence.grid.fillWithRandomLetters();
   }
 
   getMinWordLength(sentence: Sentence): number {
@@ -141,15 +142,8 @@ export class App {
     return 4;
   }
 
-  regenerateGrid() {
-    if (this.grid) {
-      this.populateGrid();
-    }
-  }
-
   resetTopic() {
     this.currentTopic = null;
-    this.grid = null;
     this.errorMessage = null;
   }
   

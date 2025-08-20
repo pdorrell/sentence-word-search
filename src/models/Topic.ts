@@ -23,7 +23,9 @@ export class Topic {
   setCurrentSentenceIndex(index: number) {
     if (index >= 0 && index < this.sentences.length) {
       this.currentSentenceIndex = index;
-      this.parent.regenerateGrid();
+      const sentence = this.sentences[index];
+      // Initialize grid for this sentence if it doesn't exist
+      this.parent.initializeSentenceGrid(sentence);
     }
   }
 
