@@ -48,7 +48,7 @@ export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sente
             {token.type === 'word' ? (
               renderWord(sentence.words[token.wordIndex!], token.wordIndex!, app.debugMode)
             ) : (
-              <span className="word pre-revealed">{token.text}</span>
+              <span className="non-word">{token.text}</span>
             )}
           </React.Fragment>
         ))}
