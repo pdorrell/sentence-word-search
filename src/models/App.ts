@@ -11,6 +11,7 @@ export class App {
   wikipediaService: WikipediaService;
   textParser: TextParser;
   debugMode: boolean = false;
+  compactMode: boolean = false;
   currentLanguage: string = 'en';
   errorMessage: string | null = null;
 
@@ -20,7 +21,13 @@ export class App {
   ) {
     this.wikipediaService = wikipediaService;
     this.textParser = textParser;
+    // Auto-detect mobile and set compact mode default
+    this.compactMode = this.isMobileDevice();
     makeAutoObservable(this);
+  }
+
+  isMobileDevice(): boolean {
+    return window.innerWidth <= 480;
   }
 
   calculateGridSize(): number {

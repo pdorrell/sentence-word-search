@@ -13,6 +13,7 @@ interface AppViewProps {
 
 export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
   const isAboutPage = window.location.pathname === '/about';
+  const isInSolvingMode = !!(app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -62,6 +63,46 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
     );
   }
 
+  // Compact mode layout
+  if (app.compactMode) {
+    if (isInSolvingMode) {
+      // Solving mode in compact
+      return (
+        <div className="app compact solving-mode">
+          <div className="compact-sentence-row">
+            <SentenceSelector topic={app.currentTopic!} />
+            <button type="button" onClick={() => app.resetTopic()} className="new-topic-button" title="Start new topic">
+              🆕
+            </button>
+          </div>
+          {app.currentTopic!.currentSentence && (
+            <>
+              <SentenceDisplay sentence={app.currentTopic!.currentSentence} app={app} />
+              {app.grid && <WordSearchGrid grid={app.grid} />}
+            </>
+          )}
+        </div>
+      );
+    } else {
+      // Choose-word mode in compact
+      return (
+        <div className="app compact choose-word-mode">
+          <Header app={app} />
+          <TopicInput app={app} />
+          {app.errorMessage && (
+            <div className="error-message">
+              {app.errorMessage}
+            </div>
+          )}
+          {app.currentTopic?.loading && (
+            <div className="loading">Loading...</div>
+          )}
+        </div>
+      );
+    }
+  }
+
+  // Normal (non-compact) mode layout
   return (
     <div className="app">
       <Header app={app} />

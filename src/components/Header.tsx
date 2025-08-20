@@ -37,17 +37,33 @@ export const Header: React.FC<HeaderProps> = observer(({ app }) => {
     setShowConfirm(false);
   };
 
+  const handleCompactToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    app.compactMode = e.target.checked;
+  };
+
   return (
     <header className="header">
       <h1>Sentence Word Search</h1>
       <div className="header-controls">
         <span className="version">{version}</span>
-        <input 
-          type="checkbox" 
-          className="debug-toggle"
-          checked={app.debugMode}
-          onChange={handleDebugToggle}
-        />
+        <label className="checkbox-label" title="Debug mode">
+          <span className="emoji-label">🔍</span>
+          <input 
+            type="checkbox" 
+            className="debug-toggle"
+            checked={app.debugMode}
+            onChange={handleDebugToggle}
+          />
+        </label>
+        <label className="checkbox-label" title="Compact mode">
+          <span className="emoji-label">📱</span>
+          <input 
+            type="checkbox" 
+            className="compact-toggle"
+            checked={app.compactMode}
+            onChange={handleCompactToggle}
+          />
+        </label>
         <button className="info-button" onClick={() => setShowAbout(true)} title="About">
           ℹ️
         </button>

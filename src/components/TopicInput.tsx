@@ -78,7 +78,7 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
           placeholder="e.g., Elephant"
           title="Enter Wikipedia topic to generate word searches"
         />
-        {app.currentTopic && !app.currentTopic.error && (
+        {app.currentTopic && !app.currentTopic.error && !app.compactMode && (
           <button type="button" onClick={handleNewTopic} className="new-topic-button" title="Start new topic">
             🆕
           </button>
