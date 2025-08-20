@@ -78,8 +78,9 @@ body, html {
       
       .sentence-container {
         margin-bottom: 5px;
-        height: calc(1.5rem * 1.4 * 3 + 20px); // 3 lines in compact mode
-        min-height: calc(1.5rem * 1.4 * 3 + 20px);
+        min-height: calc(1.5rem * 1.4 * 3 + 20px); // 3 lines minimum in compact mode
+        max-height: fit-content; // Don't grow taller than content
+        flex: 0 0 auto; // Don't grow, size to content
       }
       
       .sentence-display {
