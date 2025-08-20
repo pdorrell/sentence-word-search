@@ -74,7 +74,7 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
       )}
       
       {app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0 && (
-        <>
+        <div className="game-content">
           <SentenceSelector topic={app.currentTopic} />
           {app.currentTopic.currentSentence && (
             <>
@@ -82,7 +82,7 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
               {app.grid && <WordSearchGrid grid={app.grid} />}
             </>
           )}
-        </>
+        </div>
       )}
       
       {app.currentTopic?.loading && (

@@ -16,6 +16,9 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
@@ -342,16 +345,20 @@ body {
   }
 }
 
-.sentence-container {
-  margin-bottom: 30px;
-  max-height: calc(100vh - 400px);
-  min-height: calc(1.5rem * 1.4 * 4 + 40px); // 4 lines minimum + padding
+.game-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  
-  @media (max-height: 600px) {
-    max-height: calc(100vh - 300px);
-  }
+  overflow: hidden;
+}
+
+.sentence-container {
+  margin-bottom: 10px;
+  min-height: calc(1.5rem * 1.4 * 4 + 40px); // 4 lines minimum + padding = ~174px
+  height: calc(1.5rem * 1.4 * 4 + 40px); // Force to minimum height
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .sentence-display {
