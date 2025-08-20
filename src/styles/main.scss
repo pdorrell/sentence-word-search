@@ -465,17 +465,14 @@ body, html {
   .word {
     padding: 2px 4px;
     border-radius: 3px;
+    background: transparent;
     
     &.unrevealed {
       background: #ffcccc;
     }
     
-    &.revealed-by-user {
+    &.revealed {
       background: #cce5ff;
-    }
-    
-    &.pre-revealed {
-      background: transparent;
     }
   }
   

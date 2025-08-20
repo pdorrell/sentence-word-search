@@ -10,33 +10,22 @@ interface SentenceDisplayProps {
 }
 
 export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sentence, app }) => {
-  const renderWord = (word: Word, wordIndex: number, isDebug: boolean) => {
-    const isRevealed = word.revealed;
-    const revealedByUser = word.revealedByUser;
-    
-    const getWordClass = () => {
-      if (!isRevealed) return 'word unrevealed';
-      if (revealedByUser) return 'word revealed-by-user';
-      return 'word pre-revealed';
-    };
+  const getWordClasses = (word: Word) => {
+    const classes = ['word'];
+    if (word.revealedByUser) {
+      classes.push('revealed');
+    } else if (!word.revealed) {
+      classes.push('unrevealed');
+    }
+    // Words that are revealed but not by user (auto-revealed) get no extra class
+    return classes.join(' ');
+  };
 
+  const getWordContent = (word: Word, isDebug: boolean) => {
     if (isDebug) {
-      return (
-        <span key={wordIndex}>
-          <span className={getWordClass()}>
-            {word.originalText}
-          </span>
-        </span>
-      );
+      return word.originalText;
     } else {
-      const displayWord = isRevealed ? word.originalText : '●'.repeat(word.originalText.length);
-      return (
-        <span key={wordIndex}>
-          <span className={getWordClass()}>
-            {displayWord}
-          </span>
-        </span>
-      );
+      return word.revealed ? word.originalText : '●'.repeat(word.originalText.length);
     }
   };
   
@@ -44,13 +33,15 @@ export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sente
     <div className="sentence-container">
       <div className={app.debugMode ? "sentence-display debug" : "sentence-display"}>
         {sentence.tokens.map((token, index) => (
-          <React.Fragment key={index}>
-            {token.type === 'word' ? (
-              renderWord(sentence.words[token.wordIndex!], token.wordIndex!, app.debugMode)
-            ) : (
-              <span className="non-word">{token.text}</span>
-            )}
-          </React.Fragment>
+          token.type === 'word' ? (
+            <span key={index} className={getWordClasses(sentence.words[token.wordIndex!])}>
+              {getWordContent(sentence.words[token.wordIndex!], app.debugMode)}
+            </span>
+          ) : (
+            <span key={index} className="non-word">
+              {token.text}
+            </span>
+          )
         ))}
       </div>
     </div>
