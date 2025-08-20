@@ -16,9 +16,11 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
     e?.preventDefault();
     if (input.trim() && !app.currentTopic) {
       await app.loadTopic(input.trim(), language.toLowerCase());
-      const topic = app.currentTopic;
-      if (topic && !topic.error) {
-        setInput(input.trim());
+      // After loading, check if topic was created successfully
+      if (app.currentTopic) {
+        if (!(app.currentTopic as any).error) {
+          setInput(input.trim());
+        }
       }
     }
   };
