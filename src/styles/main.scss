@@ -96,20 +96,13 @@ body, html {
 .header {
   text-align: center;
   margin-bottom: 30px;
-  position: relative;
-  
-  h1 {
-    font-size: 2.5rem;
-    color: #2c3e50;
-  }
   
   .header-controls {
-    position: absolute;
-    top: 0;
-    right: 0;
     display: flex;
+    justify-content: flex-end;
     align-items: center;
     gap: 10px;
+    margin-bottom: 10px;
     
     .version {
       font-size: 0.9rem;
@@ -146,6 +139,12 @@ body, html {
         opacity: 1;
       }
     }
+  }
+  
+  h1 {
+    font-size: 1.75rem; // 70% of original 2.5rem
+    color: #2c3e50;
+    margin: 0;
   }
 }
 
