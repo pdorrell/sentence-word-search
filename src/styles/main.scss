@@ -53,10 +53,14 @@ body, html {
         
         .sentence-selector {
           flex: 1;
+          margin-bottom: 0; // Remove default margin in compact mode
+          align-self: center;
         }
         
         .new-topic-button {
           flex-shrink: 0;
+          font-size: 1.5rem; // 50% larger than normal 1rem
+          align-self: center;
         }
       }
       
