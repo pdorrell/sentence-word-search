@@ -67,8 +67,8 @@ export class App {
       
       for (const sentenceText of limitedSentences) {
         topic.addSentence(sentenceText);
-        const words = this.textParser.extractWords(sentenceText);
-        topic.sentences[topic.sentences.length - 1].parseWords(words);
+        const tokens = this.textParser.extractSentenceTokens(sentenceText);
+        topic.sentences[topic.sentences.length - 1].parseTokens(tokens);
       }
       
       topic.loading = false;

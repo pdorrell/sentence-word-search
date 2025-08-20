@@ -19,4 +19,37 @@ export class TextParser {
       })
       .filter((word: string) => word.length > 0);
   }
+
+  extractSentenceTokens(sentence: string): Array<{type: 'word' | 'non-word', text: string, originalText?: string}> {
+    const tokens: Array<{type: 'word' | 'non-word', text: string, originalText?: string}> = [];
+    
+    // Use regex to split into word and non-word tokens
+    const regex = /(\w+(?:['-]\w+)*)|([^\w\s]+)|(\s+)/g;
+    let match;
+    
+    while ((match = regex.exec(sentence)) !== null) {
+      if (match[1]) {
+        // Word token (including apostrophes and hyphens)
+        tokens.push({
+          type: 'word',
+          text: match[1].toUpperCase(), // For grid placement
+          originalText: match[1] // Original case for display
+        });
+      } else if (match[2]) {
+        // Punctuation/symbol token
+        tokens.push({
+          type: 'non-word',
+          text: match[2]
+        });
+      } else if (match[3]) {
+        // Whitespace token
+        tokens.push({
+          type: 'non-word',
+          text: match[3]
+        });
+      }
+    }
+    
+    return tokens;
+  }
 }
