@@ -9,7 +9,7 @@ body {
   background: #f5f5f5;
   color: #333;
   overflow-x: hidden;
-  overscroll-behavior-y: contain;
+  overscroll-behavior: none;
   touch-action: pan-y pinch-zoom;
 }
 
