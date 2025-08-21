@@ -28,6 +28,9 @@ body, html {
   width: 100vw;
   border: 3px solid blue;
   box-sizing: border-box;
+  overflow: hidden; // Ensure nothing escapes this container
+  display: flex;
+  flex-direction: column;
 }
 
 .app {
@@ -40,16 +43,13 @@ body, html {
   
   &.compact {
     padding: 10px;
-    height: 100%;
-    width: 100%;
+    flex: 1; // Fill the outer container
     overflow: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
     overscroll-behavior: none;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    min-height: 0; // Allow shrinking in flex container
     
     &.choose-word-mode {
       .header {
@@ -99,8 +99,8 @@ body, html {
       
       .sentence-container {
         margin-bottom: 5px;
-        min-height: calc(1.2rem * 1.2 * 3 + 20px); // 3 lines minimum with compact font/line-height
-        flex: 1; // Expand to fill available space
+        min-height: 0; // Allow sentence to shrink as much as needed
+        flex: 1 1 auto; // Can grow and shrink
         display: flex;
         flex-direction: column;
         overflow: hidden; // Prevent content from overflowing
@@ -108,7 +108,8 @@ body, html {
       
       .sentence-display {
         padding: 10px;
-        flex: 1; // Expand to fill available space in container
+        flex: 1 1 auto; // Can grow and shrink
+        min-height: 0; // Allow to shrink as needed
         overflow-y: auto; // Allow scrolling if sentence is very long
         font-size: 1.2rem; // Smaller font for compact mode
         line-height: 1.2; // Tighter line spacing for compact mode
@@ -116,17 +117,8 @@ body, html {
       
       .word-search-grid {
         margin-top: 5px;
-        flex-shrink: 1; // Allow grid to shrink when space is constrained
-        min-height: 0; // Allow grid to shrink below its natural size
-        display: flex;
-        justify-content: center;
-        
-        svg {
-          max-width: 100%;
-          max-height: 100%;
-          height: auto;
-          width: auto;
-        }
+        flex: 0 0 auto; // Don't grow or shrink - maintain natural size
+        overflow: hidden; // Clip if grid would extend past container
       }
     }
   }
