@@ -99,20 +99,34 @@ body, html {
       
       .sentence-container {
         margin-bottom: 5px;
-        min-height: calc(1.5rem * 1.4 * 3 + 20px); // 3 lines minimum
+        min-height: calc(1.2rem * 1.2 * 3 + 20px); // 3 lines minimum with compact font/line-height
         flex: 1; // Expand to fill available space
         display: flex;
         flex-direction: column;
+        overflow: hidden; // Prevent content from overflowing
       }
       
       .sentence-display {
         padding: 10px;
         flex: 1; // Expand to fill available space in container
+        overflow-y: auto; // Allow scrolling if sentence is very long
+        font-size: 1.2rem; // Smaller font for compact mode
+        line-height: 1.2; // Tighter line spacing for compact mode
       }
       
       .word-search-grid {
         margin-top: 5px;
-        flex-shrink: 0; // Don't shrink the grid
+        flex-shrink: 1; // Allow grid to shrink when space is constrained
+        min-height: 0; // Allow grid to shrink below its natural size
+        display: flex;
+        justify-content: center;
+        
+        svg {
+          max-width: 100%;
+          max-height: 100%;
+          height: auto;
+          width: auto;
+        }
       }
     }
   }
