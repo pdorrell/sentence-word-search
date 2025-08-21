@@ -41,4 +41,44 @@ export class WikipediaService {
 
     return paragraphs[0];
   }
+
+  async fetchDisambiguationLinks(topic: string, language: string = 'en'): Promise<string[]> {
+    const baseUrl = `https://${language}.wikipedia.org/w/api.php`;
+    
+    const params = new URLSearchParams({
+      action: 'query',
+      format: 'json',
+      titles: topic,
+      prop: 'links',
+      pllimit: '500',
+      origin: '*'
+    });
+
+    const response = await fetch(`${baseUrl}?${params}`, {
+      headers: {
+        'User-Agent': 'Sentence Word Search/1.0 (https://word-search.thinkinghard.com/; web@thinkinghard.com)',
+        'Api-User-Agent': 'Sentence Word Search/1.0 (https://word-search.thinkinghard.com/; web@thinkinghard.com)'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch disambiguation links from Wikipedia');
+    }
+
+    const data = await response.json();
+    const pages = data.query.pages;
+    const pageId = Object.keys(pages)[0];
+
+    if (pageId === '-1' || pages[pageId].missing !== undefined || !pages[pageId].links) {
+      return [];
+    }
+
+    const links = pages[pageId].links;
+    const titles = links
+      .map((link: any) => link.title)
+      .filter((title: string) => !title.startsWith('Help:'))
+      .slice(0, links.findIndex((link: any) => link.title.startsWith('Help:')) || links.length);
+
+    return titles;
+  }
 }

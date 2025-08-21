@@ -6,6 +6,7 @@ import { TopicInput } from './TopicInput';
 import { SentenceSelector } from './SentenceSelector';
 import { SentenceDisplay } from './SentenceDisplay';
 import { WordSearchGrid } from './WordSearchGrid';
+import { DisambiguationDialog } from './DisambiguationDialog';
 
 interface AppViewProps {
   app: App;
@@ -81,6 +82,14 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
               {app.currentTopic!.currentSentence.grid && <WordSearchGrid grid={app.currentTopic!.currentSentence.grid} />}
             </>
           )}
+          {app.showDisambiguationDialog && (
+            <DisambiguationDialog
+              topic={app.disambiguationTopic}
+              options={app.disambiguationOptions}
+              onSelect={(topic) => app.onDisambiguationSelect(topic)}
+              onCancel={() => app.onDisambiguationCancel()}
+            />
+          )}
         </div>
       );
     } else {
@@ -96,6 +105,14 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
           )}
           {app.currentTopic?.loading && (
             <div className="loading">Loading...</div>
+          )}
+          {app.showDisambiguationDialog && (
+            <DisambiguationDialog
+              topic={app.disambiguationTopic}
+              options={app.disambiguationOptions}
+              onSelect={(topic) => app.onDisambiguationSelect(topic)}
+              onCancel={() => app.onDisambiguationCancel()}
+            />
           )}
         </div>
       );
@@ -128,6 +145,15 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
       
       {app.currentTopic?.loading && (
         <div className="loading">Loading...</div>
+      )}
+      
+      {app.showDisambiguationDialog && (
+        <DisambiguationDialog
+          topic={app.disambiguationTopic}
+          options={app.disambiguationOptions}
+          onSelect={(topic) => app.onDisambiguationSelect(topic)}
+          onCancel={() => app.onDisambiguationCancel()}
+        />
       )}
     </div>
   );

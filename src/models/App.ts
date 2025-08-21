@@ -13,6 +13,9 @@ export class App {
   compactMode: boolean = false;
   currentLanguage: string = 'en';
   errorMessage: string | null = null;
+  showDisambiguationDialog: boolean = false;
+  disambiguationOptions: string[] = [];
+  disambiguationTopic: string = '';
 
   constructor(
     wikipediaService: WikipediaService = new WikipediaService(),
@@ -51,15 +54,7 @@ export class App {
       
       // Check for disambiguation page (single sentence ending with "may refer to")
       if (sentences.length === 1 && sentences[0].trim().endsWith('may refer to:')) {
-        const ambiguousTranslations: Record<string, string> = {
-          'en': 'Ambiguous topic word',
-          'es': 'Palabra temática ambigua',
-          'qu': 'Mana chuyanchasqa tema simi'
-        };
-        this.setErrorMessage(ambiguousTranslations[language] || ambiguousTranslations['en']);
-        topic.loading = false;
-        topic.error = null;
-        this.currentTopic = null;
+        await this.handleDisambiguation(word, language);
         return;
       }
       
@@ -97,6 +92,50 @@ export class App {
       }
       this.currentTopic = null;
     }
+  }
+
+  async handleDisambiguation(word: string, language: string) {
+    try {
+      const options = await this.wikipediaService.fetchDisambiguationLinks(word, language);
+      if (options.length > 0) {
+        this.disambiguationTopic = word;
+        this.disambiguationOptions = options;
+        this.showDisambiguationDialog = true;
+        this.currentTopic = null; // Clear loading state
+      } else {
+        // Fallback to original error message if no links found
+        const ambiguousTranslations: Record<string, string> = {
+          'en': 'Ambiguous topic word',
+          'es': 'Palabra temática ambigua',
+          'qu': 'Mana chuyanchasqa tema simi'
+        };
+        this.setErrorMessage(ambiguousTranslations[language] || ambiguousTranslations['en']);
+        this.currentTopic = null;
+      }
+    } catch (error) {
+      // If fetching links fails, show the original disambiguation error
+      const ambiguousTranslations: Record<string, string> = {
+        'en': 'Ambiguous topic word',
+        'es': 'Palabra temática ambigua',
+        'qu': 'Mana chuyanchasqa tema simi'
+      };
+      this.setErrorMessage(ambiguousTranslations[language] || ambiguousTranslations['en']);
+      this.currentTopic = null;
+    }
+  }
+
+  onDisambiguationSelect(selectedTopic: string) {
+    this.showDisambiguationDialog = false;
+    this.disambiguationOptions = [];
+    this.disambiguationTopic = '';
+    this.loadTopic(selectedTopic, this.currentLanguage);
+  }
+
+  onDisambiguationCancel() {
+    this.showDisambiguationDialog = false;
+    this.disambiguationOptions = [];
+    this.disambiguationTopic = '';
+    this.currentTopic = null;
   }
 
   initializeSentenceGrid(sentence: Sentence) {
