@@ -99,22 +99,6 @@ export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid })
         style={{ touchAction: 'none' }}
       >
 
-        {/* Letters */}
-        {grid.cells.map((row, rowIndex) =>
-          row.map((letter, colIndex) => (
-            <text
-              key={`${rowIndex}-${colIndex}`}
-              x={colIndex * cellSize + cellSize / 2}
-              y={rowIndex * cellSize + cellSize / 2 + fontSize / 3}
-              fontSize={fontSize}
-              textAnchor="middle"
-              className="letter"
-            >
-              {letter}
-            </text>
-          ))
-        )}
-
         {/* Correct selections */}
         {grid.correctSelections.map((selection, index) => {
           const isLast = index === grid.correctSelections.length - 1 && 
@@ -135,6 +119,22 @@ export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid })
 
         {/* Current selection */}
         {renderCurrentSelection()}
+
+        {/* Letters - rendered last so they appear on top */}
+        {grid.cells.map((row, rowIndex) =>
+          row.map((letter, colIndex) => (
+            <text
+              key={`${rowIndex}-${colIndex}`}
+              x={colIndex * cellSize + cellSize / 2}
+              y={rowIndex * cellSize + cellSize / 2 + fontSize / 3}
+              fontSize={fontSize}
+              textAnchor="middle"
+              className="letter"
+            >
+              {letter}
+            </text>
+          ))
+        )}
       </svg>
     </div>
   );
