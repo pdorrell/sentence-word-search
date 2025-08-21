@@ -1,14 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { App } from '../models/App';
-import { ConfirmDialog } from './ConfirmDialog';
 
 interface TopicInputProps {
   app: App;
 }
 
 export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
-  const [showConfirm, setShowConfirm] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e?: React.FormEvent) => {
@@ -23,34 +21,6 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
     if (app.topicInput.trim() && !app.currentTopic) {
       handleSubmit();
     }
-  };
-
-  const handleNewTopic = () => {
-    const currentSentence = app.currentTopic?.currentSentence;
-    const needsConfirmation = currentSentence?.isStarted && !currentSentence?.isComplete;
-    
-    if (needsConfirmation) {
-      setShowConfirm(true);
-    } else {
-      app.resetTopic();
-      // Focus the input after resetting
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 0);
-    }
-  };
-
-  const handleConfirmReset = () => {
-    app.resetTopic();
-    setShowConfirm(false);
-    // Focus the input after resetting
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 0);
-  };
-
-  const handleCancelReset = () => {
-    setShowConfirm(false);
   };
 
   return (
@@ -79,21 +49,9 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
           placeholder="eg tiger"
           title="Enter Wikipedia topic to generate word searches"
         />
-        {app.currentTopic && !app.currentTopic.error && !app.compactMode && (
-          <button type="button" onClick={handleNewTopic} className="new-topic-button" title="Start new topic">
-            🆕
-          </button>
-        )}
       </form>
       {app.currentTopic?.error && (
         <div className="error">{app.currentTopic.error}</div>
-      )}
-      {showConfirm && (
-        <ConfirmDialog
-          message="The current sentence is not complete. Do you want to start with a new topic?"
-          onConfirm={handleConfirmReset}
-          onCancel={handleCancelReset}
-        />
       )}
     </div>
   );
