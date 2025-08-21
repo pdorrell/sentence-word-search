@@ -367,9 +367,20 @@ body, html {
   }
   
   .copyright {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
     color: #666;
+    
+    a {
+      color: #4a90e2;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
   
   .modal-ok {

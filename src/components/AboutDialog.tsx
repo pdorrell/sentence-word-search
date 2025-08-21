@@ -28,7 +28,10 @@ export const AboutDialog: React.FC<AboutDialogProps> = ({ onClose }) => {
             Wikipedia page.
           </li>
         </ul>
-        <p className="copyright">© Philip Dorrell 2025</p>
+        <p className="copyright">
+          <span>© Philip Dorrell 2025</span>
+          <a href="https://github.com/pdorrell/sentence-word-search" target="_blank" rel="noopener noreferrer">Source</a>
+        </p>
         <div className="modal-buttons">
           <button className="modal-ok" onClick={onClose}>
             OK
