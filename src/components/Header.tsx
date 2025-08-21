@@ -43,7 +43,6 @@ export const Header: React.FC<HeaderProps> = observer(({ app }) => {
 
   return (
     <header className="header">
-      <h1>Sentence Word Search</h1>
       <div className="header-controls">
         <span className="version">{version}</span>
         <label className="checkbox-label" title="Debug mode">
@@ -68,6 +67,7 @@ export const Header: React.FC<HeaderProps> = observer(({ app }) => {
           ℹ️
         </button>
       </div>
+      <h1>Sentence Word Search</h1>
       {showConfirm && (
         <ConfirmDialog
           message="Do you want to cheat by seeing the letters of unsolved words?"
