@@ -519,6 +519,26 @@ body, html {
   }
 }
 
+.topic-and-selectors {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 50px; // Minimum 50px horizontal separation
+  margin-bottom: 30px;
+  
+  .topic-input {
+    flex: 0 1 auto;
+    margin-bottom: 0; // Remove default margin when in flex container
+  }
+  
+  .sentence-selector-row {
+    flex: 0 1 auto;
+    margin-bottom: 0; // Remove default margin when in flex container
+  }
+}
+
 .sentence-selector-row {
   display: flex;
   justify-content: center;
@@ -533,6 +553,7 @@ body, html {
     border: none;
     padding: 0;
     margin: 0;
+    margin-left: 20px; // Extra 20px space before NEW button
     cursor: pointer;
     opacity: 0.8;
     transition: opacity 0.2s;

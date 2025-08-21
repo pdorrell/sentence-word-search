@@ -130,7 +130,20 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
     <div className="outer-app-container">
       <div className="app">
         <Header app={app} />
-        <TopicInput app={app} />
+        
+        {app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0 ? (
+          <div className="topic-and-selectors">
+            <TopicInput app={app} />
+            <div className="sentence-selector-row">
+              <SentenceSelector topic={app.currentTopic} />
+              <button type="button" onClick={() => app.resetTopic()} className="new-topic-button" title="Start new topic">
+                🆕
+              </button>
+            </div>
+          </div>
+        ) : (
+          <TopicInput app={app} />
+        )}
         
         {app.errorMessage && (
           <div className="error-message">
@@ -140,12 +153,6 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
         
         {app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0 && (
           <div className="game-content">
-            <div className="sentence-selector-row">
-              <SentenceSelector topic={app.currentTopic} />
-              <button type="button" onClick={() => app.resetTopic()} className="new-topic-button" title="Start new topic">
-                🆕
-              </button>
-            </div>
             {app.currentTopic.currentSentence && (
               <>
                 <SentenceDisplay sentence={app.currentTopic.currentSentence} app={app} />
