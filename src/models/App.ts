@@ -16,7 +16,8 @@ export class App {
   showDisambiguationDialog: boolean = false;
   disambiguationOptions: string[] = [];
   disambiguationTopic: string = '';
-  selectedDisambiguationTopic: string | null = null;
+  topicInput: string = '';
+  inputLanguage: string = 'EN';
 
   constructor(
     wikipediaService: WikipediaService = new WikipediaService(),
@@ -72,6 +73,8 @@ export class App {
       if (topic.sentences.length > 0) {
         // Initialize grid for the first sentence
         this.initializeSentenceGrid(topic.sentences[0]);
+        // Update input to show the actual loaded topic
+        this.topicInput = word;
       }
     } catch (error) {
       topic.loading = false;
@@ -129,7 +132,6 @@ export class App {
     this.showDisambiguationDialog = false;
     this.disambiguationOptions = [];
     this.disambiguationTopic = '';
-    this.selectedDisambiguationTopic = selectedTopic;
     this.loadTopic(selectedTopic, this.currentLanguage);
   }
 
@@ -186,7 +188,15 @@ export class App {
   resetTopic() {
     this.currentTopic = null;
     this.errorMessage = null;
-    this.selectedDisambiguationTopic = null;
+    this.topicInput = '';
+  }
+
+  setTopicInput(value: string) {
+    this.topicInput = value;
+  }
+
+  setInputLanguage(language: string) {
+    this.inputLanguage = language;
   }
   
   setErrorMessage(message: string) {

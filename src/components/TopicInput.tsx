@@ -8,29 +8,19 @@ interface TopicInputProps {
 }
 
 export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
-  const [input, setInput] = useState('');
-  const [language, setLanguage] = useState('EN');
   const [showConfirm, setShowConfirm] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (input.trim() && !app.currentTopic) {
-      await app.loadTopic(input.trim(), language.toLowerCase());
-      // After loading, check if topic was created successfully
-      if (app.currentTopic) {
-        if (!(app.currentTopic as any).error) {
-          // Use the selected disambiguation topic if available, otherwise use the trimmed input
-          const finalTopic = app.selectedDisambiguationTopic || input.trim();
-          setInput(finalTopic);
-        }
-      }
+    if (app.topicInput.trim() && !app.currentTopic) {
+      await app.loadTopic(app.topicInput.trim(), app.inputLanguage.toLowerCase());
     }
   };
 
   const handleBlur = () => {
     // Only submit on blur if there's input and no topic loaded yet
-    if (input.trim() && !app.currentTopic) {
+    if (app.topicInput.trim() && !app.currentTopic) {
       handleSubmit();
     }
   };
@@ -43,7 +33,6 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
       setShowConfirm(true);
     } else {
       app.resetTopic();
-      setInput('');
       // Focus the input after resetting
       setTimeout(() => {
         inputRef.current?.focus();
@@ -53,7 +42,6 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
 
   const handleConfirmReset = () => {
     app.resetTopic();
-    setInput('');
     setShowConfirm(false);
     // Focus the input after resetting
     setTimeout(() => {
@@ -70,8 +58,8 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
       <form onSubmit={handleSubmit}>
         <label htmlFor="topic" title="Enter Wikipedia topic to generate word searches">Topic</label>
         <select
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
+          value={app.inputLanguage}
+          onChange={(e) => app.setInputLanguage(e.target.value)}
           disabled={!!app.currentTopic && !app.currentTopic.error}
           className="language-selector"
         >
@@ -83,8 +71,8 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
           ref={inputRef}
           id="topic"
           type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          value={app.topicInput}
+          onChange={(e) => app.setTopicInput(e.target.value)}
           onBlur={handleBlur}
           disabled={!!app.currentTopic && !app.currentTopic.error}
           maxLength={20}
