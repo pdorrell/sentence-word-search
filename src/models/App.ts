@@ -16,6 +16,7 @@ export class App {
   showDisambiguationDialog: boolean = false;
   disambiguationOptions: string[] = [];
   disambiguationTopic: string = '';
+  selectedDisambiguationTopic: string | null = null;
 
   constructor(
     wikipediaService: WikipediaService = new WikipediaService(),
@@ -128,6 +129,7 @@ export class App {
     this.showDisambiguationDialog = false;
     this.disambiguationOptions = [];
     this.disambiguationTopic = '';
+    this.selectedDisambiguationTopic = selectedTopic;
     this.loadTopic(selectedTopic, this.currentLanguage);
   }
 
@@ -184,6 +186,7 @@ export class App {
   resetTopic() {
     this.currentTopic = null;
     this.errorMessage = null;
+    this.selectedDisambiguationTopic = null;
   }
   
   setErrorMessage(message: string) {

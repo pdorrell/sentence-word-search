@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { App } from '../models/App';
 import { ConfirmDialog } from './ConfirmDialog';
@@ -11,6 +11,7 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
   const [input, setInput] = useState('');
   const [language, setLanguage] = useState('EN');
   const [showConfirm, setShowConfirm] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -19,7 +20,9 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
       // After loading, check if topic was created successfully
       if (app.currentTopic) {
         if (!(app.currentTopic as any).error) {
-          setInput(input.trim());
+          // Use the selected disambiguation topic if available, otherwise use the trimmed input
+          const finalTopic = app.selectedDisambiguationTopic || input.trim();
+          setInput(finalTopic);
         }
       }
     }
@@ -41,6 +44,10 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
     } else {
       app.resetTopic();
       setInput('');
+      // Focus the input after resetting
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
     }
   };
 
@@ -48,6 +55,10 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
     app.resetTopic();
     setInput('');
     setShowConfirm(false);
+    // Focus the input after resetting
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 0);
   };
 
   const handleCancelReset = () => {
@@ -69,6 +80,7 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
           <option value="QU">QU</option>
         </select>
         <input
+          ref={inputRef}
           id="topic"
           type="text"
           value={input}
