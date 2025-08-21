@@ -110,7 +110,8 @@ body, html {
         flex: 1 1 auto; // Can grow and shrink
         min-height: 0; // Allow to shrink as needed
         overflow-y: auto; // Allow scrolling if sentence is very long
-        font-size: 1.2rem; // Smaller font for compact mode
+        font-size: 1.3rem; // Compact mode font size
+        font-weight: bold; // Bold text for better readability
         line-height: 1.2; // Tighter line spacing for compact mode
       }
       
