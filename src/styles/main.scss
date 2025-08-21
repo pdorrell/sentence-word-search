@@ -12,6 +12,12 @@ body, html {
   overscroll-behavior: none;
 }
 
+#root {
+  width: 100vw;
+  height: 100dvh;
+  touch-action: none;
+}
+
 .app {
   max-width: 1200px;
   margin: 0 auto;
@@ -21,15 +27,22 @@ body, html {
   flex-direction: column;
   
   &.compact {
-    padding: 10px;
-    height: 100vh;
-    max-height: 100vh;
+    /* Account for safe areas on all sides */
+    padding-top: max(10px, env(safe-area-inset-top));
+    padding-right: max(10px, env(safe-area-inset-right));
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+    padding-left: max(10px, env(safe-area-inset-left));
+    height: 100vh; // Fallback for older browsers
+    height: 100dvh; // Use dynamic viewport height for mobile
+    width: 100vw;
     overflow: hidden;
     position: fixed;
-    width: 100%;
     top: 0;
     left: 0;
     overscroll-behavior: none;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
     
     &.choose-word-mode {
       .header {
@@ -42,7 +55,7 @@ body, html {
     }
     
     &.solving-mode {
-      padding: 5px;
+      /* Padding is handled by safe-area-inset at container level */
       
       .compact-sentence-row {
         display: flex;
@@ -50,6 +63,7 @@ body, html {
         gap: 10px;
         margin-bottom: 10px;
         padding: 5px;
+        flex-shrink: 0; // Don't shrink this row
         
         .sentence-selector {
           flex: 1;
@@ -78,17 +92,20 @@ body, html {
       
       .sentence-container {
         margin-bottom: 5px;
-        min-height: calc(1.5rem * 1.4 * 3 + 20px); // 3 lines minimum in compact mode
-        max-height: fit-content; // Don't grow taller than content
-        flex: 0 0 auto; // Don't grow, size to content
+        min-height: calc(1.5rem * 1.4 * 3 + 20px); // 3 lines minimum
+        flex: 1; // Expand to fill available space
+        display: flex;
+        flex-direction: column;
       }
       
       .sentence-display {
         padding: 10px;
+        flex: 1; // Expand to fill available space in container
       }
       
       .word-search-grid {
         margin-top: 5px;
+        flex-shrink: 0; // Don't shrink the grid
       }
     }
   }
