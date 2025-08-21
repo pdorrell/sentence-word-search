@@ -75,7 +75,6 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
           onChange={(e) => app.setTopicInput(e.target.value)}
           onBlur={handleBlur}
           disabled={!!app.currentTopic && !app.currentTopic.error}
-          maxLength={20}
           autoFocus
           placeholder="e.g., Elephant"
           title="Enter Wikipedia topic to generate word searches"

@@ -54,8 +54,8 @@ export class App {
       const text = await this.wikipediaService.fetchFirstParagraph(word, language);
       const sentences = this.textParser.extractSentences(text);
       
-      // Check for disambiguation page (single sentence ending with "may refer to")
-      if (sentences.length === 1 && sentences[0].trim().endsWith('may refer to:')) {
+      // Check for disambiguation page (single sentence ending with colon, like "may refer to:" or other patterns)
+      if (sentences.length === 1 && sentences[0].trim().endsWith(':')) {
         await this.handleDisambiguation(word, language);
         return;
       }
@@ -132,7 +132,11 @@ export class App {
     this.showDisambiguationDialog = false;
     this.disambiguationOptions = [];
     this.disambiguationTopic = '';
-    this.loadTopic(selectedTopic, this.currentLanguage);
+    // Remove " (disambiguation)" suffix if present for API request
+    const topicForApi = selectedTopic.endsWith(' (disambiguation)') 
+      ? selectedTopic.slice(0, -' (disambiguation)'.length)
+      : selectedTopic;
+    this.loadTopic(topicForApi, this.currentLanguage);
   }
 
   onDisambiguationCancel() {
