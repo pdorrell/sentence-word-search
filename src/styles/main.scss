@@ -525,7 +525,8 @@ body, html {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 50px; // Minimum 50px horizontal separation
+  column-gap: 50px; // 50px horizontal separation
+  row-gap: 20px; // 20px vertical separation when wrapped
   margin-bottom: 30px;
   
   .topic-input {
