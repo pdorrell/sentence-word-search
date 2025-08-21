@@ -99,7 +99,6 @@ body, html {
       .sentence-container {
         margin-bottom: 5px;
         min-height: 0; // Allow sentence to shrink as much as needed
-        flex: 1 1 auto; // Can grow and shrink
         display: flex;
         flex-direction: column;
         overflow: hidden; // Prevent content from overflowing
@@ -107,7 +106,6 @@ body, html {
       
       .sentence-display {
         padding: 10px;
-        flex: 1 1 auto; // Can grow and shrink
         min-height: 0; // Allow to shrink as needed
         overflow-y: auto; // Allow scrolling if sentence is very long
         font-size: 1.3rem; // Compact mode font size
