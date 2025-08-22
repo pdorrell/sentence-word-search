@@ -11,8 +11,8 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
 
   // Get available languages, including user preferences from navigator.languages
   const availableLanguages = useMemo(() => {
-    // Start with the default languages
-    const languages = new Set(['EN', 'ES', 'QU']);
+    // Start with the default languages (EN, ES, MI, QU)
+    const languages = new Set(['EN', 'ES', 'MI', 'QU']);
     
     // Add user preference languages from browser
     if (typeof navigator !== 'undefined') {

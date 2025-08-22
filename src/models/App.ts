@@ -81,6 +81,7 @@ export class App {
       const translations: Record<string, string> = {
         'en': 'Word not found',
         'es': 'Palabra no encontrada',
+        'mi': 'Kaore i kitea te kupu',
         'qu': 'Mana tarisqachu'
       };
       
@@ -111,6 +112,7 @@ export class App {
         const ambiguousTranslations: Record<string, string> = {
           'en': 'Ambiguous topic word',
           'es': 'Palabra temática ambigua',
+          'mi': 'Kupu kaupapa rangirua',
           'qu': 'Mana chuyanchasqa tema simi'
         };
         this.setErrorMessage(ambiguousTranslations[language] || ambiguousTranslations['en']);
@@ -121,6 +123,7 @@ export class App {
       const ambiguousTranslations: Record<string, string> = {
         'en': 'Ambiguous topic word',
         'es': 'Palabra temática ambigua',
+        'mi': 'Kupu kaupapa rangirua',
         'qu': 'Mana chuyanchasqa tema simi'
       };
       this.setErrorMessage(ambiguousTranslations[language] || ambiguousTranslations['en']);
