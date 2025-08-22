@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { App } from '../models/App';
 
@@ -8,6 +8,44 @@ interface TopicInputProps {
 
 export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Get available languages, including user preferences from navigator.languages
+  const availableLanguages = useMemo(() => {
+    // Start with the default languages
+    const languages = new Set(['EN', 'ES', 'QU']);
+    
+    // Add user preference languages from browser
+    if (typeof navigator !== 'undefined' && navigator.languages) {
+      navigator.languages.forEach(lang => {
+        // Extract the main 2-letter language code (e.g., 'en-US' -> 'EN')
+        const mainLang = lang.split('-')[0].toUpperCase();
+        // Only add 2-letter codes (skip regional variants like 'zh-Hant')
+        if (mainLang.length === 2) {
+          languages.add(mainLang);
+        }
+      });
+    }
+    
+    // Convert to sorted array for display
+    return Array.from(languages).sort();
+  }, []);
+
+  // Ensure the current language is valid, or default to the first user preference or EN
+  React.useEffect(() => {
+    if (!availableLanguages.includes(app.inputLanguage)) {
+      // Try to use the first browser language if available, otherwise use EN
+      if (navigator.languages && navigator.languages.length > 0) {
+        const firstLang = navigator.languages[0].split('-')[0].toUpperCase();
+        if (firstLang.length === 2 && availableLanguages.includes(firstLang)) {
+          app.setInputLanguage(firstLang);
+        } else {
+          app.setInputLanguage('EN');
+        }
+      } else {
+        app.setInputLanguage('EN');
+      }
+    }
+  }, [availableLanguages, app]);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -33,9 +71,9 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
           disabled={!!app.currentTopic && !app.currentTopic.error}
           className="language-selector"
         >
-          <option value="EN">EN</option>
-          <option value="ES">ES</option>
-          <option value="QU">QU</option>
+          {availableLanguages.map(lang => (
+            <option key={lang} value={lang}>{lang}</option>
+          ))}
         </select>
         <input
           ref={inputRef}
