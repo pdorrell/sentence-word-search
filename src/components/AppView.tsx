@@ -115,6 +115,13 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
                 onCancel={() => app.onDisambiguationCancel()}
               />
             )}
+            {showConfirmReset && (
+              <ConfirmDialog
+                message="The current sentence is not complete. Do you want to start with a new topic?"
+                onConfirm={handleConfirmReset}
+                onCancel={handleCancelReset}
+              />
+            )}
           </div>
         </div>
       );
