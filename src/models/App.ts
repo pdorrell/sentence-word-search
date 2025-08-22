@@ -202,7 +202,7 @@ export class App {
     // Define alphabets for fixed languages
     const fixedAlphabets: Record<string, string> = {
       'EN': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-      'ES': 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ',
+      'ES': 'AÁEÉIÍOÓUÚBCDFGHJKLMNÑPQRSTVWXYZ', // Spanish with accented vowels and Ñ
       'MI': 'AĀEĒHIĪKMNGOŌPRTUWH', // Māori uses macrons for long vowels
       'QU': 'ACHIJKLMNÑPQRSTUWXY' // Quechua
     };
