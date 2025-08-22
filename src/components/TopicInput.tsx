@@ -80,6 +80,18 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
     }
   };
 
+  // Get language-specific placeholder text
+  const getPlaceholder = () => {
+    const lang = app.inputLanguage.toUpperCase();
+    const placeholders: Record<string, string> = {
+      'EN': 'eg tiger',
+      'ES': 'eg tigre',
+      'MI': 'eg moa',
+      'QU': 'eg puma'
+    };
+    return placeholders[lang] || 'eg tiger';
+  };
+
   return (
     <div className="topic-input">
       <form onSubmit={handleSubmit}>
@@ -105,7 +117,7 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
           autoFocus
           autoCapitalize="off"
           autoCorrect="off"
-          placeholder="eg tiger"
+          placeholder={getPlaceholder()}
           title="Enter Wikipedia topic to generate word searches"
         />
       </form>
