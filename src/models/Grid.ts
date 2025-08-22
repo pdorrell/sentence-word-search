@@ -10,6 +10,7 @@ export class Grid {
   wrongSelection: Selection | null = null;
   parent: any;
   placedWords: Map<string, Word> = new Map();
+  languageAlphabet: string = '';
 
   constructor(size: number, parent: any) {
     this.size = Math.max(8, Math.min(12, size));
@@ -26,7 +27,22 @@ export class Grid {
   }
 
   fillWithRandomLetters() {
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    // Use language-specific alphabet if set, otherwise default to English
+    const letters = this.languageAlphabet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    
+    if (letters.length === 0) {
+      // If no alphabet is available, use default English
+      const defaultLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      for (let row = 0; row < this.size; row++) {
+        for (let col = 0; col < this.size; col++) {
+          if (this.cells[row][col] === '') {
+            this.cells[row][col] = defaultLetters[Math.floor(Math.random() * defaultLetters.length)];
+          }
+        }
+      }
+      return;
+    }
+    
     for (let row = 0; row < this.size; row++) {
       for (let col = 0; col < this.size; col++) {
         if (this.cells[row][col] === '') {
@@ -34,6 +50,10 @@ export class Grid {
         }
       }
     }
+  }
+
+  setLanguageAlphabet(alphabet: string) {
+    this.languageAlphabet = alphabet;
   }
 
   placeWord(word: Word): boolean {

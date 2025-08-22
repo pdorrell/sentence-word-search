@@ -159,6 +159,10 @@ export class App {
     sentence.grid.initializeGrid();
     sentence.grid.correctSelections = [];
     
+    // Set the appropriate alphabet for the grid based on language
+    const alphabet = this.getLanguageAlphabet(sentence);
+    sentence.grid.setLanguageAlphabet(alphabet);
+    
     const minWordLength = this.getMinWordLength(sentence);
     
     const wordsToPlace = sentence.words.filter(word => 
@@ -190,6 +194,55 @@ export class App {
     const maxLength = Math.max(...sentence.words.map((w) => w.text.length));
     if (maxLength < 4) return maxLength;
     return 4;
+  }
+
+  getLanguageAlphabet(_sentence: Sentence): string {
+    const lang = this.currentLanguage.toUpperCase();
+    
+    // Define alphabets for fixed languages
+    const fixedAlphabets: Record<string, string> = {
+      'EN': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+      'ES': 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ',
+      'MI': 'AĀEĒHIĪKMNGOŌPRTUWH', // Māori uses macrons for long vowels
+      'QU': 'ACHIJKLMNÑPQRSTUWXY' // Quechua
+    };
+    
+    // If it's a fixed language, use its known alphabet
+    if (fixedAlphabets[lang]) {
+      return fixedAlphabets[lang];
+    }
+    
+    // For other languages, extract unique letters from all sentences
+    const lettersSet = new Set<string>();
+    
+    // Get all sentences from the current topic
+    if (this.currentTopic) {
+      for (const sent of this.currentTopic.sentences) {
+        // Extract all alphabetic characters from the sentence text
+        const text = sent.text;
+        for (const char of text) {
+          // Check if it's a letter using Unicode properties
+          if (/\p{L}/u.test(char)) {
+            // Convert to uppercase if possible
+            const upperChar = char.toUpperCase();
+            // Only add if it's truly uppercase (some scripts don't have case)
+            if (upperChar === upperChar.toUpperCase()) {
+              lettersSet.add(upperChar);
+            }
+          }
+        }
+      }
+    }
+    
+    // Convert set to string and sort for consistency
+    const uniqueLetters = Array.from(lettersSet).sort().join('');
+    
+    // If we didn't find enough letters, fall back to English alphabet
+    if (uniqueLetters.length < 10) {
+      return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    }
+    
+    return uniqueLetters;
   }
 
   resetTopic() {
