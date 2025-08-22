@@ -9,6 +9,21 @@ interface TopicInputProps {
 export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Debug: collect user preference language info
+  const userLanguageInfo = useMemo(() => {
+    if (typeof navigator === 'undefined' || !navigator.languages) {
+      return { full: [], reduced: [] };
+    }
+    
+    const full = [...navigator.languages];
+    const reduced = full.map(lang => {
+      const mainLang = lang.split('-')[0].toUpperCase();
+      return mainLang.length === 2 ? mainLang : `(skipped: ${lang})`;
+    });
+    
+    return { full, reduced };
+  }, []);
+
   // Get available languages, including user preferences from navigator.languages
   const availableLanguages = useMemo(() => {
     // Start with the default languages
@@ -93,6 +108,21 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
       {app.currentTopic?.error && (
         <div className="error">{app.currentTopic.error}</div>
       )}
+      {/* Debug: Show user preference languages */}
+      <div style={{ 
+        fontSize: '12px', 
+        color: '#666', 
+        marginTop: '10px',
+        padding: '10px',
+        backgroundColor: '#f5f5f5',
+        borderRadius: '4px',
+        fontFamily: 'monospace'
+      }}>
+        <div><strong>Debug - User Language Preferences:</strong></div>
+        <div>Full codes: {userLanguageInfo.full.join(', ') || '(none)'}</div>
+        <div>Reduced codes: {userLanguageInfo.reduced.join(', ') || '(none)'}</div>
+        <div>Available in dropdown: {availableLanguages.join(', ')}</div>
+      </div>
     </div>
   );
 });
