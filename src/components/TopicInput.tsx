@@ -59,14 +59,23 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (app.topicInput.trim() && !app.currentTopic) {
-      await app.loadTopic(app.topicInput.trim(), app.inputLanguage.toLowerCase());
+    const cleanedTopic = app.topicInput.trim().toLowerCase();
+    if (cleanedTopic && !app.currentTopic) {
+      // Update the input field to show the cleaned topic
+      app.setTopicInput(cleanedTopic);
+      await app.loadTopic(cleanedTopic, app.inputLanguage.toLowerCase());
     }
   };
 
   const handleBlur = () => {
+    // Clean the input even if not submitting
+    const cleanedTopic = app.topicInput.trim().toLowerCase();
+    if (cleanedTopic !== app.topicInput) {
+      app.setTopicInput(cleanedTopic);
+    }
+    
     // Only submit on blur if there's input and no topic loaded yet
-    if (app.topicInput.trim() && !app.currentTopic) {
+    if (cleanedTopic && !app.currentTopic) {
       handleSubmit();
     }
   };

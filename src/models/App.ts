@@ -139,7 +139,10 @@ export class App {
     const topicForApi = selectedTopic.endsWith(' (disambiguation)') 
       ? selectedTopic.slice(0, -' (disambiguation)'.length)
       : selectedTopic;
-    this.loadTopic(topicForApi, this.currentLanguage);
+    // Clean the topic (trim and lowercase) before loading
+    const cleanedTopic = topicForApi.trim().toLowerCase();
+    this.topicInput = cleanedTopic;
+    this.loadTopic(cleanedTopic, this.currentLanguage);
   }
 
   onDisambiguationCancel() {
