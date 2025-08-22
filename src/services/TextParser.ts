@@ -15,7 +15,8 @@ export class TextParser {
       .map((word: string) => {
         // Remove leading and trailing punctuation, but keep internal punctuation
         // This preserves apostrophes and hyphens within words
-        return word.replace(/^[^\w'-]+|[^\w'-]+$/g, '');
+        // Use Unicode property escapes to match letters in any language
+        return word.replace(/^[^\p{L}\p{N}'-]+|[^\p{L}\p{N}'-]+$/gu, '');
       })
       .filter((word: string) => word.length > 0);
   }
@@ -24,7 +25,8 @@ export class TextParser {
     const tokens: Array<{type: 'word' | 'non-word', text: string, originalText?: string}> = [];
     
     // Use regex to split into word and non-word tokens
-    const regex = /(\w+(?:['-]\w+)*)|([^\w\s]+)|(\s+)/g;
+    // Use Unicode property escapes to match letters in any language (including accented characters)
+    const regex = /([\p{L}\p{N}]+(?:['-][\p{L}\p{N}]+)*)|([^\p{L}\p{N}\s]+)|(\s+)/gu;
     let match;
     
     while ((match = regex.exec(sentence)) !== null) {
