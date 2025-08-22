@@ -11,17 +11,28 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
 
   // Debug: collect user preference language info
   const userLanguageInfo = useMemo(() => {
-    if (typeof navigator === 'undefined' || !navigator.languages) {
-      return { full: [], reduced: [] };
+    if (typeof navigator === 'undefined') {
+      return { 
+        full: [], 
+        reduced: [],
+        navigatorLanguage: 'navigator undefined',
+        userAgent: 'navigator undefined',
+        platform: 'navigator undefined'
+      };
     }
     
-    const full = [...navigator.languages];
+    const full = navigator.languages ? [...navigator.languages] : [];
     const reduced = full.map(lang => {
       const mainLang = lang.split('-')[0].toUpperCase();
       return mainLang.length === 2 ? mainLang : `(skipped: ${lang})`;
     });
     
-    return { full, reduced };
+    // Additional debug info
+    const navigatorLanguage = navigator.language || 'undefined';
+    const userAgent = navigator.userAgent || 'undefined';
+    const platform = navigator.platform || 'undefined';
+    
+    return { full, reduced, navigatorLanguage, userAgent, platform };
   }, []);
 
   // Get available languages, including user preferences from navigator.languages
@@ -30,15 +41,25 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
     const languages = new Set(['EN', 'ES', 'QU']);
     
     // Add user preference languages from browser
-    if (typeof navigator !== 'undefined' && navigator.languages) {
-      navigator.languages.forEach(lang => {
-        // Extract the main 2-letter language code (e.g., 'en-US' -> 'EN')
-        const mainLang = lang.split('-')[0].toUpperCase();
-        // Only add 2-letter codes (skip regional variants like 'zh-Hant')
+    if (typeof navigator !== 'undefined') {
+      // Try navigator.languages first (may have multiple languages)
+      if (navigator.languages && navigator.languages.length > 0) {
+        navigator.languages.forEach(lang => {
+          // Extract the main 2-letter language code (e.g., 'en-US' -> 'EN')
+          const mainLang = lang.split('-')[0].toUpperCase();
+          // Only add 2-letter codes (skip regional variants like 'zh-Hant')
+          if (mainLang.length === 2) {
+            languages.add(mainLang);
+          }
+        });
+      }
+      // Also add navigator.language as fallback (single language)
+      else if (navigator.language) {
+        const mainLang = navigator.language.split('-')[0].toUpperCase();
         if (mainLang.length === 2) {
           languages.add(mainLang);
         }
-      });
+      }
     }
     
     // Convert to sorted array for display
@@ -110,18 +131,27 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
       )}
       {/* Debug: Show user preference languages */}
       <div style={{ 
-        fontSize: '12px', 
+        fontSize: '11px', 
         color: '#666', 
         marginTop: '10px',
         padding: '10px',
         backgroundColor: '#f5f5f5',
         borderRadius: '4px',
-        fontFamily: 'monospace'
+        fontFamily: 'monospace',
+        lineHeight: '1.4'
       }}>
-        <div><strong>Debug - User Language Preferences:</strong></div>
-        <div>Full codes: {userLanguageInfo.full.join(', ') || '(none)'}</div>
-        <div>Reduced codes: {userLanguageInfo.reduced.join(', ') || '(none)'}</div>
-        <div>Available in dropdown: {availableLanguages.join(', ')}</div>
+        <div><strong>Debug - Language Detection:</strong></div>
+        <div><strong>navigator.languages:</strong> {userLanguageInfo.full.join(', ') || '(empty array)'}</div>
+        <div><strong>navigator.language:</strong> {userLanguageInfo.navigatorLanguage}</div>
+        <div><strong>Reduced codes:</strong> {userLanguageInfo.reduced.join(', ') || '(none)'}</div>
+        <div><strong>Available in dropdown:</strong> {availableLanguages.join(', ')}</div>
+        <div style={{ marginTop: '5px', fontSize: '10px', opacity: 0.7 }}>
+          <div><strong>Platform:</strong> {userLanguageInfo.platform}</div>
+          <div><strong>User Agent:</strong> {userLanguageInfo.userAgent.substring(0, 100)}...</div>
+        </div>
+        <div style={{ marginTop: '5px', fontSize: '10px', color: '#999' }}>
+          Note: iOS Safari often only exposes the primary language for privacy reasons.
+        </div>
       </div>
     </div>
   );
