@@ -129,6 +129,8 @@ body, html {
   align-items: center;
   position: relative;
   margin-bottom: 30px;
+  column-gap: 40px; /* Minimum 40px horizontal gap */
+  row-gap: 10px; /* Small vertical gap when wrapped */
   
   h1 {
     flex: 1 1 auto;

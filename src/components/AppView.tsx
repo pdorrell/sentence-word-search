@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { App } from '../models/App';
 import { Header } from './Header';
@@ -7,14 +7,36 @@ import { SentenceSelector } from './SentenceSelector';
 import { SentenceDisplay } from './SentenceDisplay';
 import { WordSearchGrid } from './WordSearchGrid';
 import { DisambiguationDialog } from './DisambiguationDialog';
+import { ConfirmDialog } from './ConfirmDialog';
 
 interface AppViewProps {
   app: App;
 }
 
 export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
+  const [showConfirmReset, setShowConfirmReset] = useState(false);
   const isAboutPage = window.location.pathname === '/about';
   const isInSolvingMode = !!(app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0);
+
+  const handleNewTopic = () => {
+    const currentSentence = app.currentTopic?.currentSentence;
+    const needsConfirmation = currentSentence?.isStarted && !currentSentence?.isComplete;
+    
+    if (needsConfirmation) {
+      setShowConfirmReset(true);
+    } else {
+      app.resetTopic();
+    }
+  };
+
+  const handleConfirmReset = () => {
+    app.resetTopic();
+    setShowConfirmReset(false);
+  };
+
+  const handleCancelReset = () => {
+    setShowConfirmReset(false);
+  };
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -75,7 +97,7 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
           <div className="app compact solving-mode">
             <div className="compact-sentence-row">
               <SentenceSelector topic={app.currentTopic!} />
-              <button type="button" onClick={() => app.resetTopic()} className="new-topic-button" title="Start new topic">
+              <button type="button" onClick={handleNewTopic} className="new-topic-button" title="Start new topic">
                 🆕
               </button>
             </div>
@@ -136,7 +158,7 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
             <TopicInput app={app} />
             <div className="sentence-selector-row">
               <SentenceSelector topic={app.currentTopic} />
-              <button type="button" onClick={() => app.resetTopic()} className="new-topic-button" title="Start new topic">
+              <button type="button" onClick={handleNewTopic} className="new-topic-button" title="Start new topic">
                 🆕
               </button>
             </div>
@@ -172,6 +194,14 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
             options={app.disambiguationOptions}
             onSelect={(topic) => app.onDisambiguationSelect(topic)}
             onCancel={() => app.onDisambiguationCancel()}
+          />
+        )}
+        
+        {showConfirmReset && (
+          <ConfirmDialog
+            message="The current sentence is not complete. Do you want to start with a new topic?"
+            onConfirm={handleConfirmReset}
+            onCancel={handleCancelReset}
           />
         )}
       </div>
