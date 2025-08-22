@@ -63,8 +63,10 @@ export class Grid {
       const col = Math.floor(Math.random() * (maxCol + 1));
 
       if (this.canPlaceWord(word.text, row, col, dir.dr, dir.dc)) {
-        this.doPlaceWord(word, row, col, dir.dr, dir.dc);
-        return true;
+        if (this.doPlaceWord(word, row, col, dir.dr, dir.dc)) {
+          return true;
+        }
+        // If doPlaceWord returned false, continue trying other positions
       }
     }
     return false;
@@ -84,22 +86,35 @@ export class Grid {
     return true;
   }
 
-  doPlaceWord(word: Word, row: number, col: number, dr: number, dc: number) {
-    const directionName = this.getDirectionName(dr, dc);
-    word.addGridPosition(row, col, directionName);
-    
+  doPlaceWord(word: Word, row: number, col: number, dr: number, dc: number): boolean {
     // Create a unique key for this word placement
     const positions: GridPosition[] = [];
     for (let i = 0; i < word.text.length; i++) {
       const r = row + i * dr;
       const c = col + i * dc;
-      this.cells[r][c] = word.text[i];
       positions.push({ row: r, col: c });
     }
     
-    // Store the Word instance with its placement key
+    // Check if this placement key is already occupied
     const placementKey = this.getSelectionKey(positions);
+    if (this.placedWords.has(placementKey)) {
+      // This exact position and direction is already occupied by another word
+      return false;
+    }
+    
+    const directionName = this.getDirectionName(dr, dc);
+    word.addGridPosition(row, col, directionName);
+    
+    // Place the word on the grid
+    for (let i = 0; i < word.text.length; i++) {
+      const r = row + i * dr;
+      const c = col + i * dc;
+      this.cells[r][c] = word.text[i];
+    }
+    
+    // Store the Word instance with its placement key
     this.placedWords.set(placementKey, word);
+    return true;
   }
 
   getDirectionName(dr: number, dc: number): string {
