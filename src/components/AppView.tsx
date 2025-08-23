@@ -122,7 +122,7 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
                     <input
                       type="range"
                       min="100"
-                      max="150"
+                      max="200"
                       value={fontSizePercent}
                       onChange={(e) => setFontSizePercent(Number(e.target.value))}
                       style={{ flex: 1 }}
@@ -233,7 +233,7 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
                     <input
                       type="range"
                       min="100"
-                      max="150"
+                      max="200"
                       value={fontSizePercent}
                       onChange={(e) => setFontSizePercent(Number(e.target.value))}
                       style={{ flex: 1 }}
