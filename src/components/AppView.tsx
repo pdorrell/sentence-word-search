@@ -15,6 +15,7 @@ interface AppViewProps {
 
 export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
   const [showConfirmReset, setShowConfirmReset] = useState(false);
+  const [fontSizePercent, setFontSizePercent] = useState(100);
   const isAboutPage = window.location.pathname === '/about';
   const isInSolvingMode = !!(app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0);
 
@@ -104,7 +105,40 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
             {app.currentTopic!.currentSentence && (
               <>
                 <SentenceDisplay sentence={app.currentTopic!.currentSentence} app={app} />
-                {app.currentTopic!.currentSentence.grid && <WordSearchGrid grid={app.currentTopic!.currentSentence.grid} />}
+                
+                {/* Temporary font size slider */}
+                {app.currentTopic!.currentSentence.grid && (
+                  <div style={{ 
+                    padding: '10px', 
+                    backgroundColor: '#f0f0f0', 
+                    borderRadius: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                  }}>
+                    <label style={{ fontSize: '14px', fontWeight: 'bold' }}>
+                      Grid Font Size:
+                    </label>
+                    <input
+                      type="range"
+                      min="100"
+                      max="150"
+                      value={fontSizePercent}
+                      onChange={(e) => setFontSizePercent(Number(e.target.value))}
+                      style={{ flex: 1 }}
+                    />
+                    <span style={{ 
+                      fontSize: '14px', 
+                      minWidth: '50px', 
+                      textAlign: 'right',
+                      fontWeight: 'bold'
+                    }}>
+                      {fontSizePercent}%
+                    </span>
+                  </div>
+                )}
+                
+                {app.currentTopic!.currentSentence.grid && <WordSearchGrid grid={app.currentTopic!.currentSentence.grid} fontSizePercent={fontSizePercent} />}
               </>
             )}
             <DisambiguationDialog
@@ -182,7 +216,40 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
             {app.currentTopic.currentSentence && (
               <>
                 <SentenceDisplay sentence={app.currentTopic.currentSentence} app={app} />
-                {app.currentTopic.currentSentence.grid && <WordSearchGrid grid={app.currentTopic.currentSentence.grid} />}
+                
+                {/* Temporary font size slider */}
+                {app.currentTopic.currentSentence.grid && (
+                  <div style={{ 
+                    padding: '10px', 
+                    backgroundColor: '#f0f0f0', 
+                    borderRadius: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px'
+                  }}>
+                    <label style={{ fontSize: '14px', fontWeight: 'bold' }}>
+                      Grid Font Size:
+                    </label>
+                    <input
+                      type="range"
+                      min="100"
+                      max="150"
+                      value={fontSizePercent}
+                      onChange={(e) => setFontSizePercent(Number(e.target.value))}
+                      style={{ flex: 1 }}
+                    />
+                    <span style={{ 
+                      fontSize: '14px', 
+                      minWidth: '50px', 
+                      textAlign: 'right',
+                      fontWeight: 'bold'
+                    }}>
+                      {fontSizePercent}%
+                    </span>
+                  </div>
+                )}
+                
+                {app.currentTopic.currentSentence.grid && <WordSearchGrid grid={app.currentTopic.currentSentence.grid} fontSizePercent={fontSizePercent} />}
               </>
             )}
           </div>
