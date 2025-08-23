@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useDrag } from '@use-gesture/react';
 import { Grid } from '../models/Grid';
@@ -10,8 +10,10 @@ interface WordSearchGridProps {
 
 export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid }) => {
   const svgRef = useRef<SVGSVGElement>(null);
+  const [fontSizePercent, setFontSizePercent] = useState(100);
   const cellSize = 40;
-  const fontSize = 20;
+  const baseFontSize = 20;
+  const fontSize = baseFontSize * (fontSizePercent / 100);
   const svgSize = grid.size * cellSize;
 
   const getPositionFromEvent = (event: any) => {
@@ -91,6 +93,37 @@ export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid })
 
   return (
     <div className="word-search-grid">
+      {/* Temporary font size slider */}
+      <div style={{ 
+        marginBottom: '10px', 
+        padding: '10px', 
+        backgroundColor: '#f0f0f0', 
+        borderRadius: '4px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px'
+      }}>
+        <label style={{ fontSize: '14px', fontWeight: 'bold' }}>
+          Grid Font Size:
+        </label>
+        <input
+          type="range"
+          min="100"
+          max="150"
+          value={fontSizePercent}
+          onChange={(e) => setFontSizePercent(Number(e.target.value))}
+          style={{ flex: 1 }}
+        />
+        <span style={{ 
+          fontSize: '14px', 
+          minWidth: '50px', 
+          textAlign: 'right',
+          fontWeight: 'bold'
+        }}>
+          {fontSizePercent}%
+        </span>
+      </div>
+      
       <svg
         ref={svgRef}
         width={svgSize}
