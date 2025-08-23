@@ -298,6 +298,15 @@ body, html {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  
+  // Radix UI animation
+  &[data-state="open"] {
+    animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  &[data-state="closed"] {
+    animation: overlayHide 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
 }
 
 .modal-content {
@@ -307,6 +316,23 @@ body, html {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-width: 400px;
   width: 90%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  // Radix UI animation
+  &[data-state="open"] {
+    animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  &[data-state="closed"] {
+    animation: contentHide 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  &:focus {
+    outline: none;
+  }
   
   p {
     margin-bottom: 20px;
@@ -752,5 +778,46 @@ body, html {
         text-decoration: underline;
       }
     }
+  }
+}
+
+// Radix UI Dialog animations
+@keyframes overlayShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlayHide {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes contentShow {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes contentHide {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
   }
 }

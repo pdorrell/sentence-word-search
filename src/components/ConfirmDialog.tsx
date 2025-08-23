@@ -1,42 +1,45 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
 
 interface ConfirmDialogProps {
+  open: boolean;
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
 
-export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ message, onConfirm, onCancel }) => {
-  const yesButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    // Focus the Yes button by default
-    yesButtonRef.current?.focus();
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onCancel();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onCancel]);
+export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ open, message, onConfirm, onCancel }) => {
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      onCancel();
+    }
+  };
 
   return (
-    <div className="modal-overlay" onClick={onCancel}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <p>{message}</p>
-        <div className="modal-buttons">
-          <button ref={yesButtonRef} className="modal-yes" onClick={onConfirm}>
-            Yes
-          </button>
-          <button className="modal-no" onClick={onCancel}>
-            No
-          </button>
-        </div>
-      </div>
-    </div>
+    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="modal-overlay" />
+        <Dialog.Content className="modal-content">
+          <Dialog.Description asChild>
+            <p>{message}</p>
+          </Dialog.Description>
+          <div className="modal-buttons">
+            <button 
+              className="modal-yes" 
+              onClick={onConfirm}
+              autoFocus
+            >
+              Yes
+            </button>
+            <button 
+              className="modal-no" 
+              onClick={onCancel}
+            >
+              No
+            </button>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 };

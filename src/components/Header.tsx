@@ -68,16 +68,13 @@ export const Header: React.FC<HeaderProps> = observer(({ app }) => {
           ℹ️
         </button>
       </div>
-      {showConfirm && (
-        <ConfirmDialog
-          message="Do you want to cheat by seeing the letters of unsolved words?"
-          onConfirm={handleConfirmDebug}
-          onCancel={handleCancelDebug}
-        />
-      )}
-      {showAbout && (
-        <AboutDialog onClose={() => setShowAbout(false)} />
-      )}
+      <ConfirmDialog
+        open={showConfirm}
+        message="Do you want to cheat by seeing the letters of unsolved words?"
+        onConfirm={handleConfirmDebug}
+        onCancel={handleCancelDebug}
+      />
+      <AboutDialog open={showAbout} onOpenChange={setShowAbout} />
     </header>
   );
 });

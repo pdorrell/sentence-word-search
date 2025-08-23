@@ -107,21 +107,19 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
                 {app.currentTopic!.currentSentence.grid && <WordSearchGrid grid={app.currentTopic!.currentSentence.grid} />}
               </>
             )}
-            {app.showDisambiguationDialog && (
-              <DisambiguationDialog
-                topic={app.disambiguationTopic}
-                options={app.disambiguationOptions}
-                onSelect={(topic) => app.onDisambiguationSelect(topic)}
-                onCancel={() => app.onDisambiguationCancel()}
-              />
-            )}
-            {showConfirmReset && (
-              <ConfirmDialog
-                message="The current sentence is not complete. Do you want to start with a new topic?"
-                onConfirm={handleConfirmReset}
-                onCancel={handleCancelReset}
-              />
-            )}
+            <DisambiguationDialog
+              open={app.showDisambiguationDialog}
+              topic={app.disambiguationTopic}
+              options={app.disambiguationOptions}
+              onSelect={(topic) => app.onDisambiguationSelect(topic)}
+              onCancel={() => app.onDisambiguationCancel()}
+            />
+            <ConfirmDialog
+              open={showConfirmReset}
+              message="The current sentence is not complete. Do you want to start with a new topic?"
+              onConfirm={handleConfirmReset}
+              onCancel={handleCancelReset}
+            />
           </div>
         </div>
       );
@@ -140,14 +138,13 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
             {app.currentTopic?.loading && (
               <div className="loading">Loading...</div>
             )}
-            {app.showDisambiguationDialog && (
-              <DisambiguationDialog
-                topic={app.disambiguationTopic}
-                options={app.disambiguationOptions}
-                onSelect={(topic) => app.onDisambiguationSelect(topic)}
-                onCancel={() => app.onDisambiguationCancel()}
-              />
-            )}
+            <DisambiguationDialog
+              open={app.showDisambiguationDialog}
+              topic={app.disambiguationTopic}
+              options={app.disambiguationOptions}
+              onSelect={(topic) => app.onDisambiguationSelect(topic)}
+              onCancel={() => app.onDisambiguationCancel()}
+            />
           </div>
         </div>
       );
@@ -195,22 +192,20 @@ export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
           <div className="loading">Loading...</div>
         )}
         
-        {app.showDisambiguationDialog && (
-          <DisambiguationDialog
-            topic={app.disambiguationTopic}
-            options={app.disambiguationOptions}
-            onSelect={(topic) => app.onDisambiguationSelect(topic)}
-            onCancel={() => app.onDisambiguationCancel()}
-          />
-        )}
+        <DisambiguationDialog
+          open={app.showDisambiguationDialog}
+          topic={app.disambiguationTopic}
+          options={app.disambiguationOptions}
+          onSelect={(topic) => app.onDisambiguationSelect(topic)}
+          onCancel={() => app.onDisambiguationCancel()}
+        />
         
-        {showConfirmReset && (
-          <ConfirmDialog
-            message="The current sentence is not complete. Do you want to start with a new topic?"
-            onConfirm={handleConfirmReset}
-            onCancel={handleCancelReset}
-          />
-        )}
+        <ConfirmDialog
+          open={showConfirmReset}
+          message="The current sentence is not complete. Do you want to start with a new topic?"
+          onConfirm={handleConfirmReset}
+          onCancel={handleCancelReset}
+        />
       </div>
     </div>
   );
