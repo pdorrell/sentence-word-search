@@ -1,5 +1,11 @@
 import React from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
+import {
+  Root,
+  Portal,
+  Overlay,
+  Content,
+  Description
+} from '@radix-ui/react-dialog';
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -16,13 +22,13 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ open, message, onC
   };
 
   return (
-    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="modal-overlay" />
-        <Dialog.Content className="modal-content">
-          <Dialog.Description asChild>
+    <Root open={open} onOpenChange={handleOpenChange}>
+      <Portal>
+        <Overlay className="modal-overlay" />
+        <Content className="modal-content">
+          <Description asChild>
             <p>{message}</p>
-          </Dialog.Description>
+          </Description>
           <div className="modal-buttons">
             <button 
               className="modal-yes" 
@@ -38,8 +44,8 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ open, message, onC
               No
             </button>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </Content>
+      </Portal>
+    </Root>
   );
 };

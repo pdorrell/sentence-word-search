@@ -1,5 +1,13 @@
 import React from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
+import {
+  Root,
+  Portal,
+  Overlay,
+  Content,
+  Title,
+  Description,
+  Close
+} from '@radix-ui/react-dialog';
 
 interface AboutDialogProps {
   open: boolean;
@@ -8,14 +16,14 @@ interface AboutDialogProps {
 
 export const AboutDialog: React.FC<AboutDialogProps> = ({ open, onOpenChange }) => {
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="modal-overlay" />
-        <Dialog.Content className="modal-content about-modal">
-          <Dialog.Title asChild>
+    <Root open={open} onOpenChange={onOpenChange}>
+      <Portal>
+        <Overlay className="modal-overlay" />
+        <Content className="modal-content about-modal">
+          <Title asChild>
             <h2>Sentence Word Search</h2>
-          </Dialog.Title>
-          <Dialog.Description asChild>
+          </Title>
+          <Description asChild>
             <ul>
               <li>
                 Choose a language and enter a Wikipedia topic word to generate
@@ -23,20 +31,20 @@ export const AboutDialog: React.FC<AboutDialogProps> = ({ open, onOpenChange }) 
                 Wikipedia page.
               </li>
             </ul>
-          </Dialog.Description>
+          </Description>
           <p className="copyright">
             <span>© Philip Dorrell 2025</span>
             <a href="https://github.com/pdorrell/sentence-word-search" target="_blank" rel="noopener noreferrer">Source</a>
           </p>
           <div className="modal-buttons">
-            <Dialog.Close asChild>
+            <Close asChild>
               <button className="modal-ok">
                 OK
               </button>
-            </Dialog.Close>
+            </Close>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </Content>
+      </Portal>
+    </Root>
   );
 };

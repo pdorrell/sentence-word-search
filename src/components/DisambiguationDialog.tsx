@@ -1,5 +1,13 @@
 import React from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
+import {
+  Root,
+  Portal,
+  Overlay,
+  Content,
+  Title,
+  Description,
+  Close
+} from '@radix-ui/react-dialog';
 
 interface DisambiguationDialogProps {
   open: boolean;
@@ -23,16 +31,16 @@ export const DisambiguationDialog: React.FC<DisambiguationDialogProps> = ({
   };
 
   return (
-    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="modal-overlay" />
-        <Dialog.Content className="modal-content disambiguation-modal">
-          <Dialog.Title asChild>
+    <Root open={open} onOpenChange={handleOpenChange}>
+      <Portal>
+        <Overlay className="modal-overlay" />
+        <Content className="modal-content disambiguation-modal">
+          <Title asChild>
             <h3>Choose a topic for "{topic}"</h3>
-          </Dialog.Title>
-          <Dialog.Description asChild>
+          </Title>
+          <Description asChild>
             <p>This topic has multiple meanings. Please select one:</p>
-          </Dialog.Description>
+          </Description>
           
           <div className="disambiguation-options">
             {options.map((option, index) => (
@@ -47,14 +55,14 @@ export const DisambiguationDialog: React.FC<DisambiguationDialogProps> = ({
           </div>
           
           <div className="modal-buttons">
-            <Dialog.Close asChild>
+            <Close asChild>
               <button className="modal-cancel">
                 Cancel
               </button>
-            </Dialog.Close>
+            </Close>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </Content>
+      </Portal>
+    </Root>
   );
 };
