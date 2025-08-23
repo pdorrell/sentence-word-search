@@ -6,14 +6,12 @@ import { Selection } from '../models/Selection';
 
 interface WordSearchGridProps {
   grid: Grid;
-  fontSizePercent?: number;
 }
 
-export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid, fontSizePercent = 100 }) => {
+export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const cellSize = 40;
-  const baseFontSize = 20;
-  const fontSize = baseFontSize * (fontSizePercent / 100);
+  const fontSize = 28; // Changed from 20 to 28 (140% increase)
   const svgSize = grid.size * cellSize;
 
   const getPositionFromEvent = (event: any) => {
