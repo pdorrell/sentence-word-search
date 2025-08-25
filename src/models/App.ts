@@ -60,7 +60,7 @@ export class App {
         return;
       }
       
-      const limitedSentences = sentences.slice(0, 10);
+      const limitedSentences = sentences.slice(0, 7);
       
       for (const sentenceText of limitedSentences) {
         topic.addSentence(sentenceText);

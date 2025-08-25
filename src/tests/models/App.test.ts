@@ -38,13 +38,13 @@ describe('App Model', () => {
     expect(app.currentTopic).toBeNull();
   });
 
-  it('should limit sentences to 10', async () => {
+  it('should limit sentences to 7', async () => {
     const manySentences = Array(15).fill('Test sentence').map((s, i) => `${s} ${i}`);
     textParser.setSentences(manySentences);
     
     await app.loadTopic('test');
     
-    expect(app.currentTopic?.sentences).toHaveLength(10);
+    expect(app.currentTopic?.sentences).toHaveLength(7);
   });
 
   it('should calculate appropriate grid size', () => {
