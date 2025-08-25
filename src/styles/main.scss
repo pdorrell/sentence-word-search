@@ -38,6 +38,9 @@ body, html {
   padding: 20px;
   min-height: 100vh;
   display: flex;
+  overflow-x: hidden; // Prevent horizontal overflow
+  width: 100%;
+  box-sizing: border-box;
   flex-direction: column;
   
   &.compact {
@@ -571,6 +574,8 @@ body, html {
   gap: 10px;
   margin-bottom: 30px;
   min-width: 0; // Allow flex item to shrink below content size
+  max-width: 100%; // Prevent row from exceeding viewport width
+  overflow: hidden; // Ensure no overflow from the row itself
   
   .new-topic-button {
     flex-shrink: 0;
@@ -591,11 +596,11 @@ body, html {
 }
 
 .sentence-selector {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
   overflow-x: auto;
+  overflow-y: hidden;
   max-width: 100%;
+  width: 100%; // Take full available width
+  box-sizing: border-box; // Include padding in width calculation
   
   // When there are many sentences, allow horizontal scrolling
   &::-webkit-scrollbar {
@@ -614,6 +619,13 @@ body, html {
     &:hover {
       background: #bbb;
     }
+  }
+  
+  .sentence-selector-inner {
+    display: inline-flex; // Use inline-flex to not stretch full width
+    gap: 10px;
+    padding: 0 10px;
+    margin: 0 auto; // Center when there's space
   }
   
   .square {

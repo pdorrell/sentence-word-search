@@ -22,13 +22,15 @@ export const SentenceSelector: React.FC<SentenceSelectorProps> = observer(({ top
 
   return (
     <div className="sentence-selector">
-      {topic.sentences.map((_, index) => (
-        <div
-          key={index}
-          className={getSquareClass(index)}
-          onClick={() => topic.setCurrentSentenceIndex(index)}
-        />
-      ))}
+      <div className="sentence-selector-inner">
+        {topic.sentences.map((_, index) => (
+          <div
+            key={index}
+            className={getSquareClass(index)}
+            onClick={() => topic.setCurrentSentenceIndex(index)}
+          />
+        ))}
+      </div>
     </div>
   );
 });
