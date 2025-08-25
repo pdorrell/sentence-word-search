@@ -75,6 +75,7 @@ body, html {
           flex: 1;
           margin-bottom: 0; // Remove default margin in compact mode
           align-self: center;
+          min-width: 0; // Allow scrolling when content overflows
         }
         
         .new-topic-button {
@@ -569,6 +570,7 @@ body, html {
   align-items: center;
   gap: 10px;
   margin-bottom: 30px;
+  min-width: 0; // Allow flex item to shrink below content size
   
   .new-topic-button {
     flex-shrink: 0;
@@ -592,6 +594,27 @@ body, html {
   display: flex;
   justify-content: center;
   gap: 10px;
+  overflow-x: auto;
+  max-width: 100%;
+  
+  // When there are many sentences, allow horizontal scrolling
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+    
+    &:hover {
+      background: #bbb;
+    }
+  }
   
   .square {
     width: 30px;
@@ -599,6 +622,7 @@ body, html {
     border: 2px solid #333;
     cursor: pointer;
     transition: all 0.3s ease;
+    flex-shrink: 0; // Prevent squares from shrinking when many are present
     
     &:hover {
       transform: scale(1.1);
