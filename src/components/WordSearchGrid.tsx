@@ -12,13 +12,15 @@ export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid })
   const svgRef = useRef<SVGSVGElement>(null);
   const cellSize = 40;
   const fontSize = 28; // Changed from 20 to 28 (140% increase)
-  const svgSize = grid.size * cellSize;
+  const padding = 8; // Add padding around the grid
+  const gridSize = grid.size * cellSize;
+  const svgSize = gridSize + (padding * 2);
 
   const getPositionFromEvent = (event: any) => {
     if (!svgRef.current) return null;
     const rect = svgRef.current.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    const x = event.clientX - rect.left - padding; // Account for padding
+    const y = event.clientY - rect.top - padding; // Account for padding
     const col = Math.floor(x / cellSize);
     const row = Math.floor(y / cellSize);
     
@@ -54,10 +56,10 @@ export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid })
     const start = selection.positions[0];
     const end = selection.positions[selection.positions.length - 1];
     
-    const x1 = start.col * cellSize + cellSize / 2;
-    const y1 = start.row * cellSize + cellSize / 2;
-    const x2 = end.col * cellSize + cellSize / 2;
-    const y2 = end.row * cellSize + cellSize / 2;
+    const x1 = start.col * cellSize + cellSize / 2 + padding;
+    const y1 = start.row * cellSize + cellSize / 2 + padding;
+    const x2 = end.col * cellSize + cellSize / 2 + padding;
+    const y2 = end.row * cellSize + cellSize / 2 + padding;
     
     const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
     const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
@@ -125,10 +127,11 @@ export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid })
           row.map((letter, colIndex) => (
             <text
               key={`${rowIndex}-${colIndex}`}
-              x={colIndex * cellSize + cellSize / 2}
-              y={rowIndex * cellSize + cellSize / 2 + fontSize / 3}
+              x={colIndex * cellSize + cellSize / 2 + padding}
+              y={rowIndex * cellSize + cellSize / 2 + padding}
               fontSize={fontSize}
               textAnchor="middle"
+              dominantBaseline="central"
               className="letter"
             >
               {letter}
