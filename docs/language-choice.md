@@ -19,6 +19,11 @@ If the language is invalid, the user will see that in the error message when cho
 
 The important thing is that a URL can be shared or bookmarked that is specific to the choice of language.
 
+## "Other" choice in Selector
+
+The user can also choose an alternative language by choosing "Other" in the selector. Choosing this will
+active an input field in selector drop-down.
+
 ## Filler letters
 
 The 4 languages EN, ES, MI and QU have predefined:
@@ -28,5 +33,14 @@ The 4 languages EN, ES, MI and QU have predefined:
 
 For any other languages:
 
-* Yse the English placeholder.
+* Use the English placeholder.
 * For fill letters, use the set of alphabetic letters found in the sentences retrieved for the topic.
+
+## Routing implementation
+
+Do not user react-router to do the routing. The routing should be implemented via a direct interaction
+between browser URL & history and the applications mobx state:
+
+* On loading page, read the URL path to determine, if specified, what the language is.
+* When a different language is selected, update the current URL path to match.
+* Use history.pushState to keep track of URL history.
