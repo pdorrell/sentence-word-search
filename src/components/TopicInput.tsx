@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { App } from '../models/App';
 
@@ -8,54 +8,7 @@ interface TopicInputProps {
 
 export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // Get available languages, including user preferences from navigator.languages
-  const availableLanguages = useMemo(() => {
-    // Start with the default languages (EN, ES, MI, QU)
-    const languages = new Set(['EN', 'ES', 'MI', 'QU']);
-    
-    // Add user preference languages from browser
-    if (typeof navigator !== 'undefined') {
-      // Try navigator.languages first (may have multiple languages)
-      if (navigator.languages && navigator.languages.length > 0) {
-        navigator.languages.forEach(lang => {
-          // Extract the main 2-letter language code (e.g., 'en-US' -> 'EN')
-          const mainLang = lang.split('-')[0].toUpperCase();
-          // Only add 2-letter codes (skip regional variants like 'zh-Hant')
-          if (mainLang.length === 2) {
-            languages.add(mainLang);
-          }
-        });
-      }
-      // Also add navigator.language as fallback (single language)
-      else if (navigator.language) {
-        const mainLang = navigator.language.split('-')[0].toUpperCase();
-        if (mainLang.length === 2) {
-          languages.add(mainLang);
-        }
-      }
-    }
-    
-    // Convert to sorted array for display
-    return Array.from(languages).sort();
-  }, []);
-
-  // Ensure the current language is valid, or default to the first user preference or EN
-  React.useEffect(() => {
-    if (!availableLanguages.includes(app.inputLanguage)) {
-      // Try to use the first browser language if available, otherwise use EN
-      if (navigator.languages && navigator.languages.length > 0) {
-        const firstLang = navigator.languages[0].split('-')[0].toUpperCase();
-        if (firstLang.length === 2 && availableLanguages.includes(firstLang)) {
-          app.setInputLanguage(firstLang);
-        } else {
-          app.setInputLanguage('EN');
-        }
-      } else {
-        app.setInputLanguage('EN');
-      }
-    }
-  }, [availableLanguages, app]);
+  const [tempOtherInput, setTempOtherInput] = useState('');
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -64,6 +17,32 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
       // Update the input field to show the cleaned topic
       app.setTopicInput(cleanedTopic);
       await app.loadTopic(cleanedTopic, app.inputLanguage.toLowerCase());
+    }
+  };
+  
+  const handleLanguageChange = (value: string) => {
+    if (value === 'OTHER') {
+      app.setShowOtherLanguageInput(true);
+      setTempOtherInput('');
+    } else {
+      app.setInputLanguage(value);
+      app.setShowOtherLanguageInput(false);
+    }
+  };
+  
+  const handleOtherLanguageSubmit = () => {
+    const lang = tempOtherInput.trim().toUpperCase();
+    if (lang && lang.length >= 2) {
+      app.setOtherLanguageInput(lang);
+      app.applyOtherLanguage();
+      setTempOtherInput('');
+    }
+  };
+  
+  const handleOtherInputKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleOtherLanguageSubmit();
     }
   };
 
@@ -96,16 +75,40 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
     <div className="topic-input">
       <form onSubmit={handleSubmit}>
         <label htmlFor="topic" title="Enter Wikipedia topic to generate word searches">Topic</label>
-        <select
-          value={app.inputLanguage}
-          onChange={(e) => app.setInputLanguage(e.target.value)}
-          disabled={!!app.currentTopic && !app.currentTopic.error}
-          className="language-selector"
-        >
-          {availableLanguages.map(lang => (
-            <option key={lang} value={lang}>{lang}</option>
-          ))}
-        </select>
+        {app.showOtherLanguageInput ? (
+          <div className="language-input-container">
+            <input
+              type="text"
+              value={tempOtherInput}
+              onChange={(e) => setTempOtherInput(e.target.value.toUpperCase())}
+              onKeyPress={handleOtherInputKeyPress}
+              onBlur={handleOtherLanguageSubmit}
+              placeholder="Enter language code"
+              className="other-language-input"
+              autoFocus
+              maxLength={7}
+            />
+            <button
+              type="button"
+              onClick={() => app.setShowOtherLanguageInput(false)}
+              className="cancel-other-btn"
+            >
+              ✕
+            </button>
+          </div>
+        ) : (
+          <select
+            value={app.inputLanguage}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+            disabled={!!app.currentTopic && !app.currentTopic.error}
+            className="language-selector"
+          >
+            {app.selectableLanguages.map(lang => (
+              <option key={lang} value={lang}>{lang}</option>
+            ))}
+            <option value="OTHER">Other...</option>
+          </select>
+        )}
         <input
           ref={inputRef}
           id="topic"
@@ -114,7 +117,7 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
           onChange={(e) => app.setTopicInput(e.target.value)}
           onBlur={handleBlur}
           disabled={!!app.currentTopic && !app.currentTopic.error}
-          autoFocus
+          autoFocus={!app.showOtherLanguageInput}
           autoCapitalize="off"
           autoCorrect="off"
           placeholder={getPlaceholder()}

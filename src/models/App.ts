@@ -18,6 +18,9 @@ export class App {
   disambiguationTopic: string = '';
   topicInput: string = '';
   inputLanguage: string = 'EN';
+  selectableLanguages: string[] = ['EN', 'ES', 'MI', 'QU'];
+  showOtherLanguageInput: boolean = false;
+  otherLanguageInput: string = '';
 
   constructor(
     wikipediaService: WikipediaService = new WikipediaService(),
@@ -28,6 +31,9 @@ export class App {
     // Auto-detect mobile and set compact mode default
     this.compactMode = this.isMobileDevice();
     makeAutoObservable(this);
+    
+    // Initialize language from URL
+    this.initializeFromURL();
   }
 
   isMobileDevice(): boolean {
@@ -260,6 +266,51 @@ export class App {
 
   setInputLanguage(language: string) {
     this.inputLanguage = language;
+    // Update URL when language changes
+    this.updateURL();
+  }
+  
+  initializeFromURL() {
+    const path = window.location.pathname;
+    // Check if path starts with a language code (e.g., /FR, /DE, etc.)
+    const match = path.match(/^\/([A-Z]{2,})$/i);
+    if (match) {
+      const lang = match[1].toUpperCase();
+      // If it's not in the selectable languages, add it
+      if (!this.selectableLanguages.includes(lang)) {
+        this.selectableLanguages.push(lang);
+      }
+      this.inputLanguage = lang;
+    }
+  }
+  
+  updateURL() {
+    const newPath = `/${this.inputLanguage}`;
+    if (window.location.pathname !== newPath) {
+      window.history.pushState({}, '', newPath);
+    }
+  }
+  
+  setShowOtherLanguageInput(show: boolean) {
+    this.showOtherLanguageInput = show;
+    if (!show) {
+      this.otherLanguageInput = '';
+    }
+  }
+  
+  setOtherLanguageInput(value: string) {
+    this.otherLanguageInput = value.toUpperCase();
+  }
+  
+  applyOtherLanguage() {
+    if (this.otherLanguageInput && this.otherLanguageInput.length >= 2) {
+      const lang = this.otherLanguageInput.toUpperCase();
+      if (!this.selectableLanguages.includes(lang)) {
+        this.selectableLanguages.push(lang);
+      }
+      this.setInputLanguage(lang);
+      this.setShowOtherLanguageInput(false);
+    }
   }
   
   setErrorMessage(message: string) {
