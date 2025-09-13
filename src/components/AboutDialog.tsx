@@ -30,6 +30,12 @@ export const AboutDialog: React.FC<AboutDialogProps> = ({ open, onOpenChange }) 
                 word searches from sentences in the first paragraph of the
                 Wikipedia page.
               </li>
+              <li>
+                    Note: the topic word is passed directly to the Wikipedia API,
+                    so it has to be spelled exactly the same as how Wikipedia
+                    spells the word in the title of the page. (For example,
+                    with language "FR", "café" will work, but "cafe" won't.)
+              </li>
             </ul>
           </Description>
           <p className="copyright">
