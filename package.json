@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "vite --open",
+    "check-code": "tsc",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
