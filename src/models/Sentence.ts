@@ -22,9 +22,9 @@ export class Sentence {
   parseTokens(tokens: Array<{type: 'word' | 'non-word', text: string, originalText?: string}>) {
     this.words = [];
     this.tokens = [];
-    
+
     let wordIndex = 0;
-    
+
     for (const token of tokens) {
       if (token.type === 'word') {
         // Create word and track its index
