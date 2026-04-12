@@ -27,11 +27,11 @@ check:
 
 # Run tests
 test *args:
-    npm run test -- {{args}}
+    npm run test -- run {{args}}
 
 # Run tests without console output
 test-quiet:
-    npm run test -- --silent
+    npm run test -- run --silent
 
 # Audit for security vulnerabilities
 audit:
