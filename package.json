@@ -21,21 +21,11 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.15",
-    "@use-gesture/react": "^10.3.1",
-    "compromise": "^14.15.0",
-    "mobx": "^6.15.0",
-    "mobx-react-lite": "^4.1.1",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "@geajs/core": "^1.2.3",
+    "compromise": "^14.15.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
+    "@geajs/vite-plugin": "^1.2.3",
     "jsdom": "^29.0.1",
     "sass": "^1.99.0",
     "typescript": "^6.0.2",

@@ -1,7 +1,7 @@
-import { makeAutoObservable } from 'mobx';
+import { Store } from '@geajs/core';
 import { Sentence } from './Sentence';
 
-export class Topic {
+export class Topic extends Store {
   word: string;
   sentences: Sentence[] = [];
   currentSentenceIndex: number = 0;
@@ -10,9 +10,9 @@ export class Topic {
   parent: any;
 
   constructor(word: string, parent: any) {
+    super();
     this.word = word;
     this.parent = parent;
-    makeAutoObservable(this);
   }
 
   get currentSentence(): Sentence | null {

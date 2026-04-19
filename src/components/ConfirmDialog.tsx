@@ -1,11 +1,4 @@
-import React from 'react';
-import {
-  Root,
-  Portal,
-  Overlay,
-  Content,
-  Description
-} from '@radix-ui/react-dialog';
+import { Component } from '@geajs/core';
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -14,38 +7,21 @@ interface ConfirmDialogProps {
   onCancel: () => void;
 }
 
-export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ open, message, onConfirm, onCancel }) => {
-  const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      onCancel();
-    }
-  };
-
-  return (
-    <Root open={open} onOpenChange={handleOpenChange}>
-      <Portal>
-        <Overlay className="modal-overlay" />
-        <Content className="modal-content">
-          <Description asChild>
+export class ConfirmDialog extends Component<ConfirmDialogProps> {
+  template({ open, message, onConfirm, onCancel } = this.props) {
+    return (
+      <div>
+        {open && <div class="modal-overlay" click={onCancel} />}
+        {open && (
+          <div class="modal-content">
             <p>{message}</p>
-          </Description>
-          <div className="modal-buttons">
-            <button 
-              className="modal-yes" 
-              onClick={onConfirm}
-              autoFocus
-            >
-              Yes
-            </button>
-            <button 
-              className="modal-no" 
-              onClick={onCancel}
-            >
-              No
-            </button>
+            <div class="modal-buttons">
+              <button class="modal-yes" click={onConfirm} autoFocus>Yes</button>
+              <button class="modal-no" click={onCancel}>No</button>
+            </div>
           </div>
-        </Content>
-      </Portal>
-    </Root>
-  );
-};
+        )}
+      </div>
+    );
+  }
+}

@@ -1,66 +1,75 @@
-import React, { useRef, useState } from 'react';
-import { observer } from 'mobx-react-lite';
+import { Component } from '@geajs/core';
 import { App } from '../models/App';
 
 interface TopicInputProps {
   app: App;
 }
 
-export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [tempOtherInput, setTempOtherInput] = useState('');
+export class TopicInput extends Component<TopicInputProps> {
+  tempOtherInput: string = '';
 
-  const handleSubmit = async (e?: React.FormEvent) => {
+  handleSubmit = async (e?: Event) => {
     e?.preventDefault();
+    const { app } = this.props;
     const cleanedTopic = app.topicInput.trim().toLowerCase();
     if (cleanedTopic && !app.currentTopic) {
-      // Update the input field to show the cleaned topic
       app.setTopicInput(cleanedTopic);
       await app.loadTopic(cleanedTopic, app.inputLanguage.toLowerCase());
     }
   };
-  
-  const handleLanguageChange = (value: string) => {
+
+  handleLanguageChange = (e: Event) => {
+    const value = (e.target as HTMLSelectElement).value;
+    const { app } = this.props;
     if (value === 'OTHER') {
       app.setShowOtherLanguageInput(true);
-      setTempOtherInput('');
+      this.tempOtherInput = '';
     } else {
       app.setInputLanguage(value);
       app.setShowOtherLanguageInput(false);
     }
   };
-  
-  const handleOtherLanguageSubmit = () => {
-    const lang = tempOtherInput.trim().toUpperCase();
+
+  handleOtherLanguageSubmit = () => {
+    const lang = this.tempOtherInput.trim().toUpperCase();
     if (lang && lang.length >= 2) {
-      app.setOtherLanguageInput(lang);
-      app.applyOtherLanguage();
-      setTempOtherInput('');
-    }
-  };
-  
-  const handleOtherInputKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleOtherLanguageSubmit();
+      this.props.app.setOtherLanguageInput(lang);
+      this.props.app.applyOtherLanguage();
+      this.tempOtherInput = '';
     }
   };
 
-  const handleBlur = () => {
-    // Clean the input even if not submitting
+  handleOtherInputKey = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.handleOtherLanguageSubmit();
+    }
+  };
+
+  handleOtherInputChange = (e: Event) => {
+    this.tempOtherInput = (e.target as HTMLInputElement).value.toUpperCase();
+  };
+
+  handleTopicChange = (e: Event) => {
+    this.props.app.setTopicInput((e.target as HTMLInputElement).value);
+  };
+
+  handleBlur = () => {
+    const { app } = this.props;
     const cleanedTopic = app.topicInput.trim().toLowerCase();
     if (cleanedTopic !== app.topicInput) {
       app.setTopicInput(cleanedTopic);
     }
-    
-    // Only submit on blur if there's input and no topic loaded yet
     if (cleanedTopic && !app.currentTopic) {
-      handleSubmit();
+      this.handleSubmit();
     }
   };
 
-  // Get language-specific placeholder text
-  const getPlaceholder = () => {
+  cancelOther = () => {
+    this.props.app.setShowOtherLanguageInput(false);
+  };
+
+  template({ app } = this.props) {
     const lang = app.inputLanguage.toUpperCase();
     const placeholders: Record<string, string> = {
       'EN': 'eg tiger',
@@ -68,65 +77,59 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
       'MI': 'eg moa',
       'QU': 'eg puma'
     };
-    return placeholders[lang] || 'eg tiger';
-  };
+    const placeholder = placeholders[lang] || 'eg tiger';
+    const topicDisabled = !!app.currentTopic && !app.currentTopic.error;
 
-  return (
-    <div className="topic-input">
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="topic" title="Enter Wikipedia topic to generate word searches">Topic</label>
-        {app.showOtherLanguageInput ? (
-          <div className="language-input-container">
-            <input
-              type="text"
-              value={tempOtherInput}
-              onChange={(e) => setTempOtherInput(e.target.value.toUpperCase())}
-              onKeyPress={handleOtherInputKeyPress}
-              onBlur={handleOtherLanguageSubmit}
-              placeholder="Enter language code"
-              className="other-language-input"
-              autoFocus
-              maxLength={7}
-            />
-            <button
-              type="button"
-              onClick={() => app.setShowOtherLanguageInput(false)}
-              className="cancel-other-btn"
+    return (
+      <div class="topic-input">
+        <form submit={this.handleSubmit}>
+          <label htmlFor="topic" title="Enter Wikipedia topic to generate word searches">Topic</label>
+          {app.showOtherLanguageInput ? (
+            <div class="language-input-container">
+              <input
+                type="text"
+                value={this.tempOtherInput}
+                input={this.handleOtherInputChange}
+                keydown={this.handleOtherInputKey}
+                blur={this.handleOtherLanguageSubmit}
+                placeholder="Enter language code"
+                class="other-language-input"
+                autoFocus
+                maxLength={7}
+              />
+              <button type="button" click={this.cancelOther} class="cancel-other-btn">✕</button>
+            </div>
+          ) : (
+            <select
+              value={app.inputLanguage}
+              change={this.handleLanguageChange}
+              disabled={topicDisabled}
+              class="language-selector"
             >
-              ✕
-            </button>
-          </div>
-        ) : (
-          <select
-            value={app.inputLanguage}
-            onChange={(e) => handleLanguageChange(e.target.value)}
-            disabled={!!app.currentTopic && !app.currentTopic.error}
-            className="language-selector"
-          >
-            {app.selectableLanguages.map(lang => (
-              <option key={lang} value={lang}>{lang}</option>
-            ))}
-            <option value="OTHER">Other...</option>
-          </select>
+              {app.selectableLanguages.map((l) => (
+                <option key={l} value={l}>{l}</option>
+              ))}
+              <option value="OTHER">Other...</option>
+            </select>
+          )}
+          <input
+            id="topic"
+            type="text"
+            value={app.topicInput}
+            input={this.handleTopicChange}
+            blur={this.handleBlur}
+            disabled={topicDisabled}
+            autoFocus={!app.showOtherLanguageInput}
+            autoCapitalize="off"
+            autoCorrect="off"
+            placeholder={placeholder}
+            title="Enter Wikipedia topic to generate word searches"
+          />
+        </form>
+        {app.currentTopic?.error && (
+          <div class="error">{app.currentTopic.error}</div>
         )}
-        <input
-          ref={inputRef}
-          id="topic"
-          type="text"
-          value={app.topicInput}
-          onChange={(e) => app.setTopicInput(e.target.value)}
-          onBlur={handleBlur}
-          disabled={!!app.currentTopic && !app.currentTopic.error}
-          autoFocus={!app.showOtherLanguageInput}
-          autoCapitalize="off"
-          autoCorrect="off"
-          placeholder={getPlaceholder()}
-          title="Enter Wikipedia topic to generate word searches"
-        />
-      </form>
-      {app.currentTopic?.error && (
-        <div className="error">{app.currentTopic.error}</div>
-      )}
-    </div>
-  );
-});
+      </div>
+    );
+  }
+}

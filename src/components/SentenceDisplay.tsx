@@ -1,5 +1,4 @@
-import React from 'react';
-import { observer } from 'mobx-react-lite';
+import { Component } from '@geajs/core';
 import { Sentence } from '../models/Sentence';
 import { App } from '../models/App';
 import { Word } from '../models/Word';
@@ -9,41 +8,37 @@ interface SentenceDisplayProps {
   app: App;
 }
 
-export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sentence, app }) => {
-  const getWordClasses = (word: Word) => {
-    const classes = ['word'];
-    if (word.revealedByUser) {
-      classes.push('revealed');
-    } else if (!word.revealed) {
-      classes.push('unrevealed');
-    }
-    // Words that are revealed but not by user (auto-revealed) get no extra class
-    return classes.join(' ');
-  };
+export class SentenceDisplay extends Component<SentenceDisplayProps> {
+  template({ sentence, app } = this.props) {
+    const getWordClasses = (word: Word) => {
+      const classes = ['word'];
+      if (word.revealedByUser) {
+        classes.push('revealed');
+      } else if (!word.revealed) {
+        classes.push('unrevealed');
+      }
+      return classes.join(' ');
+    };
 
-  const getWordContent = (word: Word, isDebug: boolean) => {
-    if (isDebug) {
-      return word.originalText;
-    } else {
+    const getWordContent = (word: Word, isDebug: boolean) => {
+      if (isDebug) return word.originalText;
       return word.revealed ? word.originalText : '●'.repeat(word.originalText.length);
-    }
-  };
-  
-  return (
-    <div className="sentence-container">
-      <div className={app.debugMode ? "sentence-display debug" : "sentence-display"}>
-        {sentence.tokens.map((token, index) => (
-          token.type === 'word' ? (
-            <span key={index} className={getWordClasses(sentence.words[token.wordIndex!])}>
-              {getWordContent(sentence.words[token.wordIndex!], app.debugMode)}
-            </span>
-          ) : (
-            <span key={index} className="non-word">
-              {token.text}
-            </span>
-          )
-        ))}
+    };
+
+    return (
+      <div class="sentence-container">
+        <div class={app.debugMode ? 'sentence-display debug' : 'sentence-display'}>
+          {sentence.tokens.map((token, index) => (
+            token.type === 'word' ? (
+              <span key={index} class={getWordClasses(sentence.words[token.wordIndex!])}>
+                {getWordContent(sentence.words[token.wordIndex!], app.debugMode)}
+              </span>
+            ) : (
+              <span key={index} class="non-word">{token.text}</span>
+            )
+          ))}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+}

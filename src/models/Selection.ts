@@ -1,20 +1,20 @@
-import { makeAutoObservable } from 'mobx';
+import { Store } from '@geajs/core';
 
 export interface GridPosition {
   row: number;
   col: number;
 }
 
-export class Selection {
+export class Selection extends Store {
   positions: GridPosition[];
   word: string;
   timestamp: number;
 
   constructor(positions: GridPosition[], word: string) {
+    super();
     this.positions = positions;
     this.word = word;
     this.timestamp = Date.now();
-    makeAutoObservable(this);
   }
 
   get startPos(): GridPosition {

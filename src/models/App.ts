@@ -1,11 +1,11 @@
-import { makeAutoObservable } from 'mobx';
+import { Store } from '@geajs/core';
 import { Topic } from './Topic';
 import { Grid } from './Grid';
 import { Sentence } from './Sentence';
 import { WikipediaService } from '../services/WikipediaService';
 import { TextParser } from '../services/TextParser';
 
-export class App {
+export class App extends Store {
   currentTopic: Topic | null = null;
   wikipediaService: WikipediaService;
   textParser: TextParser;
@@ -26,13 +26,10 @@ export class App {
     wikipediaService: WikipediaService = new WikipediaService(),
     textParser: TextParser = new TextParser()
   ) {
+    super();
     this.wikipediaService = wikipediaService;
     this.textParser = textParser;
-    // Auto-detect mobile and set compact mode default
     this.compactMode = this.isMobileDevice();
-    makeAutoObservable(this);
-    
-    // Initialize language from URL
     this.initializeFromURL();
   }
 

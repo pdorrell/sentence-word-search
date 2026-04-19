@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { observer } from 'mobx-react-lite';
+import { Component } from '@geajs/core';
 import { App } from '../models/App';
 import { ConfirmDialog } from './ConfirmDialog';
 import { AboutDialog } from './AboutDialog';
@@ -8,73 +7,77 @@ interface HeaderProps {
   app: App;
 }
 
-export const Header: React.FC<HeaderProps> = observer(({ app }) => {
-  const [version, setVersion] = useState<string>('');
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [showAbout, setShowAbout] = useState(false);
+export class Header extends Component<HeaderProps> {
+  version: string = '';
+  showConfirm: boolean = false;
+  showAbout: boolean = false;
 
-  useEffect(() => {
+  created() {
     fetch('/version.txt')
-      .then(response => response.text())
-      .then(text => setVersion(text.trim()))
-      .catch(() => setVersion(''));
-  }, []);
+      .then((response) => response.text())
+      .then((text) => { this.version = text.trim(); })
+      .catch(() => { this.version = ''; });
+  }
 
-  const handleDebugToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked && !app.debugMode) {
-      setShowConfirm(true);
-    } else if (!e.target.checked) {
-      app.debugMode = false;
+  handleDebugToggle = (e: Event) => {
+    const checked = (e.target as HTMLInputElement).checked;
+    if (checked && !this.props.app.debugMode) {
+      this.showConfirm = true;
+    } else if (!checked) {
+      this.props.app.debugMode = false;
     }
   };
 
-  const handleConfirmDebug = () => {
-    app.debugMode = true;
-    setShowConfirm(false);
+  handleConfirmDebug = () => {
+    this.props.app.debugMode = true;
+    this.showConfirm = false;
   };
 
-  const handleCancelDebug = () => {
-    setShowConfirm(false);
+  handleCancelDebug = () => {
+    this.showConfirm = false;
   };
 
-  const handleCompactToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    app.compactMode = e.target.checked;
+  handleCompactToggle = (e: Event) => {
+    this.props.app.compactMode = (e.target as HTMLInputElement).checked;
   };
 
-  return (
-    <header className="header">
-      <h1>Sentence Word Search</h1>
-      <div className="header-controls">
-        <span className="version">{version}</span>
-        <label className="checkbox-label" title="Debug mode">
-          <span className="emoji-label">🔍</span>
-          <input 
-            type="checkbox" 
-            className="debug-toggle"
-            checked={app.debugMode}
-            onChange={handleDebugToggle}
-          />
-        </label>
-        <label className="checkbox-label" title="Compact mode">
-          <span className="emoji-label">📱</span>
-          <input 
-            type="checkbox" 
-            className="compact-toggle"
-            checked={app.compactMode}
-            onChange={handleCompactToggle}
-          />
-        </label>
-        <button className="info-button" onClick={() => setShowAbout(true)} title="About">
-          ℹ️
-        </button>
-      </div>
-      <ConfirmDialog
-        open={showConfirm}
-        message="Do you want to cheat by seeing the letters of unsolved words?"
-        onConfirm={handleConfirmDebug}
-        onCancel={handleCancelDebug}
-      />
-      <AboutDialog open={showAbout} onOpenChange={setShowAbout} />
-    </header>
-  );
-});
+  showAboutDialog = () => { this.showAbout = true; };
+  setShowAbout = (open: boolean) => { this.showAbout = open; };
+
+  template({ app } = this.props) {
+    return (
+      <header class="header">
+        <h1>Sentence Word Search</h1>
+        <div class="header-controls">
+          <span class="version">{this.version}</span>
+          <label class="checkbox-label" title="Debug mode">
+            <span class="emoji-label">🔍</span>
+            <input
+              type="checkbox"
+              class="debug-toggle"
+              checked={app.debugMode}
+              change={this.handleDebugToggle}
+            />
+          </label>
+          <label class="checkbox-label" title="Compact mode">
+            <span class="emoji-label">📱</span>
+            <input
+              type="checkbox"
+              class="compact-toggle"
+              checked={app.compactMode}
+              change={this.handleCompactToggle}
+            />
+          </label>
+          <button class="info-button" click={this.showAboutDialog} title="About">ℹ️</button>
+        </div>
+        <ConfirmDialog
+          open={this.showConfirm}
+          message="Do you want to cheat by seeing the letters of unsolved words?"
+          onConfirm={this.handleConfirmDebug}
+          onCancel={this.handleCancelDebug}
+        />
+        <AboutDialog open={this.showAbout} onOpenChange={this.setShowAbout} />
+      </header>
+    );
+  }
+}

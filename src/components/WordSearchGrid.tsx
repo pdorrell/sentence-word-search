@@ -1,144 +1,160 @@
-import React, { useRef } from 'react';
-import { observer } from 'mobx-react-lite';
-import { useDrag } from '@use-gesture/react';
+import { Component } from '@geajs/core';
 import { Grid } from '../models/Grid';
-import { Selection } from '../models/Selection';
+import { Selection, GridPosition } from '../models/Selection';
 
 interface WordSearchGridProps {
   grid: Grid;
 }
 
-export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid }) => {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const cellSize = 40;
-  const fontSize = 28; // Changed from 20 to 28 (140% increase)
-  const padding = 8; // Add padding around the grid
-  const gridSize = grid.size * cellSize;
-  const svgSize = gridSize + (padding * 2);
+interface RenderedSelection {
+  x1: number;
+  y1: number;
+  length: number;
+  angle: number;
+  height: number;
+  offset: number;
+  rx: number;
+  className: string;
+  key: string;
+}
 
-  const getPositionFromEvent = (event: any) => {
-    if (!svgRef.current) return null;
-    const rect = svgRef.current.getBoundingClientRect();
-    const x = event.clientX - rect.left - padding; // Account for padding
-    const y = event.clientY - rect.top - padding; // Account for padding
-    const col = Math.floor(x / cellSize);
-    const row = Math.floor(y / cellSize);
-    
-    if (row >= 0 && row < grid.size && col >= 0 && col < grid.size) {
+const CELL_SIZE = 40;
+const FONT_SIZE = 28;
+const PADDING = 8;
+
+function buildRenderedSelection(selection: Selection, className: string, key: string): RenderedSelection | null {
+  if (selection.positions.length < 2) return null;
+  const start = selection.positions[0];
+  const end = selection.positions[selection.positions.length - 1];
+
+  const x1 = start.col * CELL_SIZE + CELL_SIZE / 2 + PADDING;
+  const y1 = start.row * CELL_SIZE + CELL_SIZE / 2 + PADDING;
+  const x2 = end.col * CELL_SIZE + CELL_SIZE / 2 + PADDING;
+  const y2 = end.row * CELL_SIZE + CELL_SIZE / 2 + PADDING;
+
+  const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+  const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+  const isDiagonal = start.row !== end.row && start.col !== end.col;
+  const height = isDiagonal ? CELL_SIZE * 0.64 : CELL_SIZE * 0.8;
+  const offset = isDiagonal ? CELL_SIZE * 0.32 : CELL_SIZE * 0.4;
+
+  return {
+    x1, y1, length, angle, height, offset,
+    rx: CELL_SIZE * 0.3,
+    className,
+    key
+  };
+}
+
+export class WordSearchGrid extends Component<WordSearchGridProps> {
+  svgEl: SVGSVGElement | null = null;
+
+  getPositionFromEvent(event: PointerEvent): GridPosition | null {
+    if (!this.svgEl) return null;
+    const rect = this.svgEl.getBoundingClientRect();
+    const x = event.clientX - rect.left - PADDING;
+    const y = event.clientY - rect.top - PADDING;
+    const col = Math.floor(x / CELL_SIZE);
+    const row = Math.floor(y / CELL_SIZE);
+    const size = this.props.grid.size;
+    if (row >= 0 && row < size && col >= 0 && col < size) {
       return { row, col };
     }
     return null;
-  };
+  }
 
-  const bind = useDrag(({
-    first,
-    last,
-    event
-  }) => {
-    if (first) {
-      const pos = getPositionFromEvent(event);
-      if (pos) {
-        grid.startSelection(pos.row, pos.col);
-      }
-    } else if (last) {
-      grid.endSelection();
-    } else {
-      const pos = getPositionFromEvent(event);
-      if (pos) {
-        grid.updateSelection(pos.row, pos.col);
-      }
+  handlePointerDown = (e: PointerEvent) => {
+    const pos = this.getPositionFromEvent(e);
+    if (pos) {
+      this.props.grid.startSelection(pos.row, pos.col);
+      (e.currentTarget as Element).setPointerCapture(e.pointerId);
     }
-  });
+  };
 
-  const renderSelection = (selection: Selection, className: string, key: string) => {
-    if (selection.positions.length < 2) return null;
-    
-    const start = selection.positions[0];
-    const end = selection.positions[selection.positions.length - 1];
-    
-    const x1 = start.col * cellSize + cellSize / 2 + padding;
-    const y1 = start.row * cellSize + cellSize / 2 + padding;
-    const x2 = end.col * cellSize + cellSize / 2 + padding;
-    const y2 = end.row * cellSize + cellSize / 2 + padding;
-    
-    const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-    const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-    
-    // Check if selection is diagonal (not horizontal or vertical)
-    const isDiagonal = start.row !== end.row && start.col !== end.col;
-    // Make diagonal selections 20% narrower (0.64 instead of 0.8)
-    const selectionHeight = isDiagonal ? cellSize * 0.64 : cellSize * 0.8;
-    const selectionOffset = isDiagonal ? cellSize * 0.32 : cellSize * 0.4;
-    
+  handlePointerMove = (e: PointerEvent) => {
+    if (this.props.grid.currentSelection.length === 0) return;
+    const pos = this.getPositionFromEvent(e);
+    if (pos) {
+      this.props.grid.updateSelection(pos.row, pos.col);
+    }
+  };
+
+  handlePointerUp = (_e: PointerEvent) => {
+    if (this.props.grid.currentSelection.length === 0) return;
+    this.props.grid.endSelection();
+  };
+
+  template({ grid } = this.props) {
+    const gridSize = grid.size * CELL_SIZE;
+    const svgSize = gridSize + PADDING * 2;
+
+    const selections: RenderedSelection[] = [];
+    grid.correctSelections.forEach((sel, index) => {
+      const isLast = index === grid.correctSelections.length - 1 && grid.currentSelection.length === 0;
+      const built = buildRenderedSelection(sel, isLast ? 'correct last' : 'correct', `correct-${index}`);
+      if (built) selections.push(built);
+    });
+    if (grid.wrongSelection) {
+      const built = buildRenderedSelection(grid.wrongSelection, 'wrong', 'wrong');
+      if (built) selections.push(built);
+    }
+    if (grid.currentSelection.length >= 2) {
+      const current = new Selection(grid.currentSelection, '');
+      const built = buildRenderedSelection(current, 'current', 'current');
+      if (built) selections.push(built);
+    }
+
+    const cellsFlat: Array<{ row: number; col: number; letter: string; key: string }> = [];
+    grid.cells.forEach((rowArr, rowIndex) => {
+      rowArr.forEach((letter, colIndex) => {
+        cellsFlat.push({
+          row: rowIndex,
+          col: colIndex,
+          letter,
+          key: `${rowIndex}-${colIndex}`
+        });
+      });
+    });
+
     return (
-      <rect
-        key={key}
-        className={`selection ${className}`}
-        x={x1 - selectionOffset}
-        y={-selectionOffset}
-        width={length + selectionOffset * 2}
-        height={selectionHeight}
-        rx={cellSize * 0.3}
-        transform={`translate(0, ${y1}) rotate(${angle} ${x1} 0)`}
-      />
-    );
-  };
-
-  const renderCurrentSelection = () => {
-    if (grid.currentSelection.length < 2) return null;
-    
-    const selection = new Selection(grid.currentSelection, '');
-    return renderSelection(selection, 'current', 'current');
-  };
-
-  return (
-    <div className="word-search-grid">
-      <svg
-        ref={svgRef}
-        width={svgSize}
-        height={svgSize}
-        {...bind()}
-        style={{ touchAction: 'none' }}
-      >
-
-        {/* Correct selections */}
-        {grid.correctSelections.map((selection, index) => {
-          const isLast = index === grid.correctSelections.length - 1 && 
-                         grid.currentSelection.length === 0;
-          return renderSelection(
-            selection,
-            isLast ? 'correct last' : 'correct',
-            `correct-${index}`
-          );
-        })}
-
-        {/* Wrong selection */}
-        {grid.wrongSelection && renderSelection(
-          grid.wrongSelection,
-          'wrong',
-          'wrong'
-        )}
-
-        {/* Current selection */}
-        {renderCurrentSelection()}
-
-        {/* Letters - rendered last so they appear on top */}
-        {grid.cells.map((row, rowIndex) =>
-          row.map((letter, colIndex) => (
+      <div class="word-search-grid">
+        <svg
+          ref={this.svgEl}
+          width={svgSize}
+          height={svgSize}
+          style="touch-action: none"
+          pointerdown={this.handlePointerDown}
+          pointermove={this.handlePointerMove}
+          pointerup={this.handlePointerUp}
+        >
+          {selections.map((s) => (
+            <rect
+              key={s.key}
+              class={`selection ${s.className}`}
+              x={s.x1 - s.offset}
+              y={-s.offset}
+              width={s.length + s.offset * 2}
+              height={s.height}
+              rx={s.rx}
+              transform={`translate(0, ${s.y1}) rotate(${s.angle} ${s.x1} 0)`}
+            />
+          ))}
+          {cellsFlat.map((c) => (
             <text
-              key={`${rowIndex}-${colIndex}`}
-              x={colIndex * cellSize + cellSize / 2 + padding}
-              y={rowIndex * cellSize + cellSize / 2 + padding}
-              fontSize={fontSize}
+              key={c.key}
+              x={c.col * CELL_SIZE + CELL_SIZE / 2 + PADDING}
+              y={c.row * CELL_SIZE + CELL_SIZE / 2 + PADDING}
+              fontSize={FONT_SIZE}
               textAnchor="middle"
               dominantBaseline="central"
-              className="letter"
+              class="letter"
             >
-              {letter}
+              {c.letter}
             </text>
-          ))
-        )}
-      </svg>
-    </div>
-  );
-});
+          ))}
+        </svg>
+      </div>
+    );
+  }
+}

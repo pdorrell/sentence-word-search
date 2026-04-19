@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { geaPlugin } from '@geajs/vite-plugin';
 import { hostname } from 'os';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [geaPlugin()],
   server: {
     host: `${hostname()}.local`,
     port: 3000
