@@ -63,7 +63,6 @@ export class AppView extends Component<AppViewProps> {
 
   template({ app } = this.props) {
     const isAboutPage = window.location.pathname === '/about';
-    const isInSolvingMode = !!(app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0);
 
     return (
       <div class="outer-app-container">
@@ -95,7 +94,7 @@ export class AppView extends Component<AppViewProps> {
             </div>
           </div>
         ) : app.compactMode ? (
-          isInSolvingMode ? (
+          (app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0) ? (
             <div class="app compact solving-mode">
               <div class="compact-sentence-row">
                 <SentenceSelector topic={app.currentTopic!} />
@@ -139,7 +138,7 @@ export class AppView extends Component<AppViewProps> {
         ) : (
           <div class="app">
             <Header app={app} />
-            {isInSolvingMode ? (
+            {(app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0) ? (
               <div class="topic-and-selectors">
                 <TopicInput app={app} />
                 <div class="sentence-selector-row">
@@ -151,7 +150,7 @@ export class AppView extends Component<AppViewProps> {
               <TopicInput app={app} />
             )}
             {app.errorMessage && <div class="error-message">{app.errorMessage}</div>}
-            {isInSolvingMode && (
+            {app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0 && (
               <div class="game-content">
                 {app.currentTopic!.currentSentence && (
                   <SentenceDisplay sentence={app.currentTopic!.currentSentence} app={app} />

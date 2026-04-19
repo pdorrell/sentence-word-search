@@ -69,17 +69,18 @@ export class TopicInput extends Component<TopicInputProps> {
     this.props.app.setShowOtherLanguageInput(false);
   };
 
-  template({ app } = this.props) {
-    const lang = app.inputLanguage.toUpperCase();
+  getPlaceholder(): string {
+    const lang = this.props.app.inputLanguage.toUpperCase();
     const placeholders: Record<string, string> = {
       'EN': 'eg tiger',
       'ES': 'eg tigre',
       'MI': 'eg moa',
       'QU': 'eg puma'
     };
-    const placeholder = placeholders[lang] || 'eg tiger';
-    const topicDisabled = !!app.currentTopic && !app.currentTopic.error;
+    return placeholders[lang] || 'eg tiger';
+  }
 
+  template({ app } = this.props) {
     return (
       <div class="topic-input">
         <form submit={this.handleSubmit}>
@@ -103,7 +104,7 @@ export class TopicInput extends Component<TopicInputProps> {
             <select
               value={app.inputLanguage}
               change={this.handleLanguageChange}
-              disabled={topicDisabled}
+              disabled={!!app.currentTopic && !app.currentTopic.error}
               class="language-selector"
             >
               {app.selectableLanguages.map((l) => (
@@ -118,11 +119,11 @@ export class TopicInput extends Component<TopicInputProps> {
             value={app.topicInput}
             input={this.handleTopicChange}
             blur={this.handleBlur}
-            disabled={topicDisabled}
+            disabled={!!app.currentTopic && !app.currentTopic.error}
             autoFocus={!app.showOtherLanguageInput}
             autoCapitalize="off"
             autoCorrect="off"
-            placeholder={placeholder}
+            placeholder={this.getPlaceholder()}
             title="Enter Wikipedia topic to generate word searches"
           />
         </form>
