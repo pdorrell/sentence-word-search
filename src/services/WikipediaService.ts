@@ -1,7 +1,16 @@
+function getApiBaseUrl(language: string): string {
+  // In dev, route through the Vite dev-server proxy so responses are cached on disk
+  // (see wikiCachePlugin in vite.config.ts). In production, call Wikipedia directly.
+  if (import.meta.env.DEV) {
+    return `/__wiki-proxy/${language}/w/api.php`;
+  }
+  return `https://${language}.wikipedia.org/w/api.php`;
+}
+
 export class WikipediaService {
   async fetchFirstParagraph(topic: string, language: string = 'en'): Promise<string> {
     // QU is Quechua language code
-    const baseUrl = `https://${language}.wikipedia.org/w/api.php`;
+    const baseUrl = getApiBaseUrl(language);
     
     const params = new URLSearchParams({
       action: 'query',
@@ -43,7 +52,7 @@ export class WikipediaService {
   }
 
   async fetchDisambiguationLinks(topic: string, language: string = 'en'): Promise<string[]> {
-    const baseUrl = `https://${language}.wikipedia.org/w/api.php`;
+    const baseUrl = getApiBaseUrl(language);
     
     const params = new URLSearchParams({
       action: 'query',
