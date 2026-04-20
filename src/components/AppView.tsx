@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import { App } from '../models/App';
 import { Header } from './Header';
@@ -13,7 +13,7 @@ interface AppViewProps {
   app: App;
 }
 
-export const AppView: React.FC<AppViewProps> = observer(({ app }) => {
+export const AppView: FC<AppViewProps> = observer(({ app }) => {
   const [showConfirmReset, setShowConfirmReset] = useState(false);
   const isAboutPage = window.location.pathname === '/about';
   const isInSolvingMode = !!(app.currentTopic && !app.currentTopic.error && app.currentTopic.sentences.length > 0);

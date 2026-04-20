@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Topic } from '../models/Topic';
 
@@ -6,7 +6,7 @@ interface SentenceSelectorProps {
   topic: Topic;
 }
 
-export const SentenceSelector: React.FC<SentenceSelectorProps> = observer(({ topic }) => {
+export const SentenceSelector: FC<SentenceSelectorProps> = observer(({ topic }) => {
   const getSquareClass = (index: number) => {
     const sentence = topic.sentences[index];
     const isCurrent = index === topic.currentSentenceIndex;

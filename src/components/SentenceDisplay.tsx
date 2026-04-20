@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Sentence } from '../models/Sentence';
 import { App } from '../models/App';
@@ -9,7 +9,7 @@ interface SentenceDisplayProps {
   app: App;
 }
 
-export const SentenceDisplay: React.FC<SentenceDisplayProps> = observer(({ sentence, app }) => {
+export const SentenceDisplay: FC<SentenceDisplayProps> = observer(({ sentence, app }) => {
   const getWordClasses = (word: Word) => {
     const classes = ['word'];
     if (word.revealedByUser) {

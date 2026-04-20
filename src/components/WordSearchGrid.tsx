@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef, FC } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useDrag } from '@use-gesture/react';
 import { Grid } from '../models/Grid';
@@ -8,7 +8,7 @@ interface WordSearchGridProps {
   grid: Grid;
 }
 
-export const WordSearchGrid: React.FC<WordSearchGridProps> = observer(({ grid }) => {
+export const WordSearchGrid: FC<WordSearchGridProps> = observer(({ grid }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const cellSize = 40;
   const fontSize = 28; // Changed from 20 to 28 (140% increase)

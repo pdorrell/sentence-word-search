@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import {
   Root,
   Portal,
@@ -14,7 +14,7 @@ interface ConfirmDialogProps {
   onCancel: () => void;
 }
 
-export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({ open, message, onConfirm, onCancel }) => {
+export const ConfirmDialog: FC<ConfirmDialogProps> = ({ open, message, onConfirm, onCancel }) => {
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       onCancel();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, FC, ChangeEvent } from 'react';
 import { observer } from 'mobx-react-lite';
 import { App } from '../models/App';
 import { ConfirmDialog } from './ConfirmDialog';
@@ -8,7 +8,7 @@ interface HeaderProps {
   app: App;
 }
 
-export const Header: React.FC<HeaderProps> = observer(({ app }) => {
+export const Header: FC<HeaderProps> = observer(({ app }) => {
   const [version, setVersion] = useState<string>('');
   const [showConfirm, setShowConfirm] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
@@ -20,7 +20,7 @@ export const Header: React.FC<HeaderProps> = observer(({ app }) => {
       .catch(() => setVersion(''));
   }, []);
 
-  const handleDebugToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDebugToggle = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked && !app.debugMode) {
       setShowConfirm(true);
     } else if (!e.target.checked) {
@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = observer(({ app }) => {
     setShowConfirm(false);
   };
 
-  const handleCompactToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCompactToggle = (e: ChangeEvent<HTMLInputElement>) => {
     app.compactMode = e.target.checked;
   };
 

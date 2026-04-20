@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState, FC, FormEvent, KeyboardEvent } from 'react';
 import { observer } from 'mobx-react-lite';
 import { App } from '../models/App';
 
@@ -6,11 +6,11 @@ interface TopicInputProps {
   app: App;
 }
 
-export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
+export const TopicInput: FC<TopicInputProps> = observer(({ app }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [tempOtherInput, setTempOtherInput] = useState('');
 
-  const handleSubmit = async (e?: React.FormEvent) => {
+  const handleSubmit = async (e?: FormEvent) => {
     e?.preventDefault();
     const cleanedTopic = app.topicInput.trim().toLowerCase();
     if (cleanedTopic && !app.currentTopic) {
@@ -39,7 +39,7 @@ export const TopicInput: React.FC<TopicInputProps> = observer(({ app }) => {
     }
   };
   
-  const handleOtherInputKeyPress = (e: React.KeyboardEvent) => {
+  const handleOtherInputKeyPress = (e: KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleOtherLanguageSubmit();

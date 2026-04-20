@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import {
   Root,
   Portal,
@@ -17,7 +17,7 @@ interface DisambiguationDialogProps {
   onCancel: () => void;
 }
 
-export const DisambiguationDialog: React.FC<DisambiguationDialogProps> = ({ 
+export const DisambiguationDialog: FC<DisambiguationDialogProps> = ({
   open,
   topic, 
   options, 

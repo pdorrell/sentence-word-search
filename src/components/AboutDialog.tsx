@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import {
   Root,
   Portal,
@@ -14,7 +14,7 @@ interface AboutDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const AboutDialog: React.FC<AboutDialogProps> = ({ open, onOpenChange }) => {
+export const AboutDialog: FC<AboutDialogProps> = ({ open, onOpenChange }) => {
   return (
     <Root open={open} onOpenChange={onOpenChange}>
       <Portal>
