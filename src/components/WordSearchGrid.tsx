@@ -1,6 +1,4 @@
-import { useRef, FC } from 'react';
-import { observer } from 'mobx-react-lite';
-import { useDrag } from '@use-gesture/react';
+import { useRef, FC, observer, useDrag } from '../framework';
 import { Grid } from '../models/Grid';
 import { Selection } from '../models/Selection';
 

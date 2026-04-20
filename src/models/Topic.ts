@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from '../framework';
 import { Sentence } from './Sentence';
 
 export class Topic {

@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from '../framework';
 import { Topic } from './Topic';
 import { Grid } from './Grid';
 import { Sentence } from './Sentence';

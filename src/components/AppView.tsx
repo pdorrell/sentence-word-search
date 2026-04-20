@@ -1,5 +1,4 @@
-import { useEffect, useState, FC } from 'react';
-import { observer } from 'mobx-react-lite';
+import { useEffect, useState, FC, observer } from '../framework';
 import { App } from '../models/App';
 import { Header } from './Header';
 import { TopicInput } from './TopicInput';

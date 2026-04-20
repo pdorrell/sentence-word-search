@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from '../framework';
 
 export interface GridPosition {
   row: number;

@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from '../framework';
 import { Word } from './Word';
 import { Grid } from './Grid';
 

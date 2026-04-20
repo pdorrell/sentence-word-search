@@ -1,5 +1,4 @@
-import { FC } from 'react';
-import { observer } from 'mobx-react-lite';
+import { FC, observer } from '../framework';
 import { Topic } from '../models/Topic';
 
 interface SentenceSelectorProps {

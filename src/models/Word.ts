@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from '../framework';
 
 export class Word {
   text: string;  // Clean text for grid placement (uppercase, no punctuation)

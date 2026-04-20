@@ -1,5 +1,4 @@
-import { useState, useEffect, FC, ChangeEvent } from 'react';
-import { observer } from 'mobx-react-lite';
+import { useState, useEffect, FC, ChangeEvent, observer } from '../framework';
 import { App } from '../models/App';
 import { ConfirmDialog } from './ConfirmDialog';
 import { AboutDialog } from './AboutDialog';

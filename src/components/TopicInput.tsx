@@ -1,5 +1,4 @@
-import { useRef, useState, FC, FormEvent, KeyboardEvent } from 'react';
-import { observer } from 'mobx-react-lite';
+import { useRef, useState, FC, FormEvent, KeyboardEvent, observer } from '../framework';
 import { App } from '../models/App';
 
 interface TopicInputProps {
