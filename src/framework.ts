@@ -4,17 +4,69 @@ import * as Mobx from 'mobx';
 import * as MobxReactLite from 'mobx-react-lite';
 import * as UseGesture from '@use-gesture/react';
 import * as DialogNS from '@radix-ui/react-dialog';
+import type { FC, ReactNode } from 'react';
+
+type SetState<T> = (next: T | ((prev: T) => T)) => void;
+type Ref<T> = { current: T | null };
+type Cleanup = () => void;
+
+type ReactRoot = {
+  render(children: ReactNode): void;
+  unmount(): void;
+};
+
+type DialogRootProps = {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children?: ReactNode;
+};
+
+type DialogChildrenProps = {
+  children?: ReactNode;
+};
+
+type DialogOverlayProps = {
+  className?: string;
+};
+
+type DialogContentProps = {
+  className?: string;
+  children?: ReactNode;
+};
+
+type DialogAsChildProps = {
+  asChild?: boolean;
+  children?: ReactNode;
+};
+
+type DialogNamespace = {
+  Root: FC<DialogRootProps>;
+  Portal: FC<DialogChildrenProps>;
+  Overlay: FC<DialogOverlayProps>;
+  Content: FC<DialogContentProps>;
+  Title: FC<DialogAsChildProps>;
+  Description: FC<DialogAsChildProps>;
+  Close: FC<DialogAsChildProps>;
+};
+
+type DragState = {
+  first: boolean;
+  last: boolean;
+  event: PointerEvent | MouseEvent | TouchEvent;
+};
+
+type DragBindings = Record<string, unknown>;
 
 export type Framework = {
-  StrictMode: typeof React.StrictMode;
-  useEffect: typeof React.useEffect;
-  useRef: typeof React.useRef;
-  useState: typeof React.useState;
-  createRoot: typeof ReactDOMClient.createRoot;
-  makeAutoObservable: typeof Mobx.makeAutoObservable;
-  observer: typeof MobxReactLite.observer;
-  useDrag: typeof UseGesture.useDrag;
-  Dialog: typeof DialogNS;
+  StrictMode: FC<{ children?: ReactNode }>;
+  useEffect: (effect: () => void | Cleanup, deps?: ReadonlyArray<unknown>) => void;
+  useRef: <T>(initial: T | null) => Ref<T>;
+  useState: <T>(initial: T) => [T, SetState<T>];
+  createRoot: (container: Element | DocumentFragment) => ReactRoot;
+  makeAutoObservable: <T extends object>(target: T) => T;
+  observer: <P>(component: FC<P>) => FC<P>;
+  useDrag: (handler: (state: DragState) => void) => () => DragBindings;
+  Dialog: DialogNamespace;
 };
 
 const theFramework: Framework = {
