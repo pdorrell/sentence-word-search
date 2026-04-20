@@ -78,7 +78,7 @@ function wikiCachePlugin(): Plugin {
 export default defineConfig({
   plugins: [react(), wikiCachePlugin()],
   server: {
-    host: `${hostname()}.local`,
+    host: 'localhost', // `${hostname()}.local`,
     port: 3000
   },
   build: {
