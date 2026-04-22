@@ -1,6 +1,6 @@
-import { makeAutoObservable } from '../framework';
+import { makeAutoObservable, Store } from '../framework';
 
-export class Word {
+export class Word extends Store {
   text: string;  // Clean text for grid placement (uppercase, no punctuation)
   originalText: string;  // Original text with punctuation
   revealed: boolean = false;
@@ -8,6 +8,7 @@ export class Word {
   gridPositions: Array<{ row: number; col: number; direction: string }> = [];
 
   constructor(originalText: string) {
+    super();
     this.originalText = originalText;
     // Keep all characters but convert to uppercase for grid placement
     this.text = originalText.toUpperCase();

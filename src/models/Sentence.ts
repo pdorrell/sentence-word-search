@@ -1,8 +1,8 @@
-import { makeAutoObservable } from '../framework';
+import { makeAutoObservable, Store } from '../framework';
 import { Word } from './Word';
 import { Grid } from './Grid';
 
-export class Sentence {
+export class Sentence extends Store {
   text: string;
   words: Word[] = [];
   tokens: Array<{type: 'word' | 'non-word', text: string, wordIndex?: number}> = [];
@@ -10,6 +10,7 @@ export class Sentence {
   parent: any;
 
   constructor(text: string, parent: any) {
+    super();
     this.text = text;
     this.parent = parent;
     makeAutoObservable(this);

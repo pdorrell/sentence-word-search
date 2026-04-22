@@ -93,4 +93,6 @@ export const {
   Dialog,
 } = theFramework;
 
+export class Store {}
+
 export type { ChangeEvent, FC, FormEvent, KeyboardEvent } from 'react';

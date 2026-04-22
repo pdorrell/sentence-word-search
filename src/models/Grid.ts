@@ -1,8 +1,8 @@
-import { makeAutoObservable } from '../framework';
+import { makeAutoObservable, Store } from '../framework';
 import { Selection, GridPosition } from './Selection';
 import { Word } from './Word';
 
-export class Grid {
+export class Grid extends Store {
   size: number;
   cells: string[][] = [];
   correctSelections: Selection[] = [];
@@ -13,6 +13,7 @@ export class Grid {
   languageAlphabet: string = '';
 
   constructor(size: number, parent: any) {
+    super();
     this.size = Math.max(8, Math.min(12, size));
     this.parent = parent;
     this.initializeGrid();

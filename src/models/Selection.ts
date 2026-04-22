@@ -1,16 +1,17 @@
-import { makeAutoObservable } from '../framework';
+import { makeAutoObservable, Store } from '../framework';
 
 export interface GridPosition {
   row: number;
   col: number;
 }
 
-export class Selection {
+export class Selection extends Store {
   positions: GridPosition[];
   word: string;
   timestamp: number;
 
   constructor(positions: GridPosition[], word: string) {
+    super();
     this.positions = positions;
     this.word = word;
     this.timestamp = Date.now();
