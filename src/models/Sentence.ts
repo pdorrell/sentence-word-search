@@ -1,4 +1,4 @@
-import { makeAutoObservable, Store } from '../framework';
+import { makeObservable, observable, computed, action, Store } from '../framework';
 import { Word } from './Word';
 import { Grid } from './Grid';
 
@@ -13,7 +13,18 @@ export class Sentence extends Store {
     super();
     this.text = text;
     this.parent = parent;
-    makeAutoObservable(this);
+    makeObservable(this, {
+      text: observable,
+      words: observable,
+      tokens: observable,
+      grid: observable,
+      parent: observable,
+      parseWords: action,
+      parseTokens: action,
+      isComplete: computed,
+      isStarted: computed,
+      revealWord: action,
+    });
   }
 
   parseWords(wordTexts: string[]) {

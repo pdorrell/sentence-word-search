@@ -1,4 +1,4 @@
-import { makeAutoObservable, Store } from '../framework';
+import { makeObservable, observable, computed, action, Store } from '../framework';
 import { Topic } from './Topic';
 import { Grid } from './Grid';
 import { Sentence } from './Sentence';
@@ -31,8 +31,44 @@ export class App extends Store {
     this.textParser = textParser;
     // Auto-detect mobile and set compact mode default
     this.compactMode = this.isMobileDevice();
-    makeAutoObservable(this);
-    
+    makeObservable(this, {
+      currentTopic: observable,
+      wikipediaService: observable,
+      textParser: observable,
+      debugMode: observable,
+      compactMode: observable,
+      currentLanguage: observable,
+      errorMessage: observable,
+      showDisambiguationDialog: observable,
+      disambiguationOptions: observable,
+      disambiguationTopic: observable,
+      topicInput: observable,
+      inputLanguage: observable,
+      selectableLanguages: observable,
+      showOtherLanguageInput: observable,
+      otherLanguageInput: observable,
+      isMobileDevice: action,
+      calculateGridSize: action,
+      loadTopic: action,
+      handleDisambiguation: action,
+      onDisambiguationSelect: action,
+      onDisambiguationCancel: action,
+      initializeSentenceGrid: action,
+      getMinWordLength: action,
+      getLanguageAlphabet: action,
+      resetTopic: action,
+      setTopicInput: action,
+      setInputLanguage: action,
+      initializeFromURL: action,
+      updateURL: action,
+      setShowOtherLanguageInput: action,
+      setOtherLanguageInput: action,
+      applyOtherLanguage: action,
+      setErrorMessage: action,
+      clearErrorMessage: action,
+      currentSentence: computed,
+    });
+
     // Initialize language from URL
     this.initializeFromURL();
   }

@@ -57,13 +57,18 @@ type DragState = {
 
 type DragBindings = Record<string, unknown>;
 
+type Annotation = unknown;
+
 export type Framework = {
   StrictMode: FC<{ children?: ReactNode }>;
   useEffect: (effect: () => void | Cleanup, deps?: ReadonlyArray<unknown>) => void;
   useRef: <T>(initial: T | null) => Ref<T>;
   useState: <T>(initial: T) => [T, SetState<T>];
   createRoot: (container: Element | DocumentFragment) => ReactRoot;
-  makeAutoObservable: <T extends object>(target: T) => T;
+  makeObservable: <T extends object>(target: T, annotations?: Record<string, Annotation>) => T;
+  observable: Annotation;
+  computed: Annotation;
+  action: Annotation;
   observer: <P>(component: FC<P>) => FC<P>;
   useDrag: (handler: (state: DragState) => void) => () => DragBindings;
   Dialog: DialogNamespace;
@@ -75,7 +80,10 @@ const theFramework: Framework = {
   useRef: React.useRef,
   useState: React.useState,
   createRoot: ReactDOMClient.createRoot,
-  makeAutoObservable: Mobx.makeAutoObservable,
+  makeObservable: Mobx.makeObservable as Framework['makeObservable'],
+  observable: Mobx.observable,
+  computed: Mobx.computed,
+  action: Mobx.action,
   observer: MobxReactLite.observer,
   useDrag: UseGesture.useDrag,
   Dialog: DialogNS,
@@ -87,7 +95,10 @@ export const {
   useRef,
   useState,
   createRoot,
-  makeAutoObservable,
+  makeObservable,
+  observable,
+  computed,
+  action,
   observer,
   useDrag,
   Dialog,

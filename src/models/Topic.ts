@@ -1,4 +1,4 @@
-import { makeAutoObservable, Store } from '../framework';
+import { makeObservable, observable, computed, action, Store } from '../framework';
 import { Sentence } from './Sentence';
 
 export class Topic extends Store {
@@ -13,7 +13,18 @@ export class Topic extends Store {
     super();
     this.word = word;
     this.parent = parent;
-    makeAutoObservable(this);
+    makeObservable(this, {
+      word: observable,
+      sentences: observable,
+      currentSentenceIndex: observable,
+      loading: observable,
+      error: observable,
+      parent: observable,
+      currentSentence: computed,
+      setCurrentSentenceIndex: action,
+      addSentence: action,
+      allComplete: computed,
+    });
   }
 
   get currentSentence(): Sentence | null {

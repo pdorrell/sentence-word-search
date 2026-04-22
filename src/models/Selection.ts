@@ -1,4 +1,4 @@
-import { makeAutoObservable, Store } from '../framework';
+import { makeObservable, observable, computed, Store } from '../framework';
 
 export interface GridPosition {
   row: number;
@@ -15,7 +15,13 @@ export class Selection extends Store {
     this.positions = positions;
     this.word = word;
     this.timestamp = Date.now();
-    makeAutoObservable(this);
+    makeObservable(this, {
+      positions: observable,
+      word: observable,
+      timestamp: observable,
+      startPos: computed,
+      endPos: computed,
+    });
   }
 
   get startPos(): GridPosition {

@@ -1,4 +1,4 @@
-import { makeAutoObservable, Store } from '../framework';
+import { makeObservable, observable, action, Store } from '../framework';
 
 export class Word extends Store {
   text: string;  // Clean text for grid placement (uppercase, no punctuation)
@@ -12,7 +12,16 @@ export class Word extends Store {
     this.originalText = originalText;
     // Keep all characters but convert to uppercase for grid placement
     this.text = originalText.toUpperCase();
-    makeAutoObservable(this);
+    makeObservable(this, {
+      text: observable,
+      originalText: observable,
+      revealed: observable,
+      revealedByUser: observable,
+      gridPositions: observable,
+      reveal: action,
+      revealByUser: action,
+      addGridPosition: action,
+    });
   }
 
   reveal() {

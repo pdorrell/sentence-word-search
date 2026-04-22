@@ -1,4 +1,4 @@
-import { makeAutoObservable, Store } from '../framework';
+import { makeObservable, observable, computed, action, Store } from '../framework';
 import { Selection, GridPosition } from './Selection';
 import { Word } from './Word';
 
@@ -17,7 +17,35 @@ export class Grid extends Store {
     this.size = Math.max(8, Math.min(12, size));
     this.parent = parent;
     this.initializeGrid();
-    makeAutoObservable(this);
+    makeObservable(this, {
+      size: observable,
+      cells: observable,
+      correctSelections: observable,
+      currentSelection: observable,
+      wrongSelection: observable,
+      parent: observable,
+      placedWords: observable,
+      languageAlphabet: observable,
+      initializeGrid: action,
+      fillWithRandomLetters: action,
+      setLanguageAlphabet: action,
+      placeWord: action,
+      canPlaceWord: action,
+      doPlaceWord: action,
+      getDirectionName: action,
+      startSelection: action,
+      updateSelection: action,
+      endSelection: action,
+      findMatchingWord: action,
+      getWordPositions: action,
+      positionsMatch: action,
+      isPalindrome: action,
+      getLinePositions: action,
+      getWordFromSelection: action,
+      getSelectionKey: action,
+      cancelSelection: action,
+      lastCorrectSelection: computed,
+    });
   }
 
   initializeGrid() {
